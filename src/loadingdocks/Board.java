@@ -28,8 +28,8 @@ public class Board {
 
 	private static List<Station> stations;
 	private static List<Hospital> hospitals;
-
 	private static List<Emergency> emergencies;
+	private static Central central;
 
 	private static Random rand = new Random();
 
@@ -59,6 +59,16 @@ public class Board {
 		hospitals.add(new Hospital(new Point(20, 7), Color.red));
 		hospitals.add(new Hospital(new Point(21, 9), Color.red));
 		hospitals.add(new Hospital(new Point(19, 10), Color.red));
+
+		/**
+		 * Initialize Emergencies
+		 * */
+		emergencies = new ArrayList<>();
+
+		/**
+		 * Create Central
+		 * */
+		central = new Central(stations, hospitals);
 
 
 		/** A: create board */
@@ -94,6 +104,7 @@ public class Board {
 //		for(Agent agent : robots) objects[agent.point.x][agent.point.y]=agent;
 
 		for (Station s : stations){
+			s.setCentral(central);
 			board[s.point.x][s.point.y] = new Block(Shape.station, s.color);
 		}
 
@@ -101,7 +112,7 @@ public class Board {
 			board[h.point.x][h.point.y] = new Block(Shape.hospital, h.color);
 		}
 
-		//Central central = new Central(stations, hospitals);
+
 
 		objects = new Entity[nX][nY];
 		for(Hospital hospital : hospitals) objects[hospital.point.x][hospital.point.y]=hospital;
@@ -189,8 +200,13 @@ public class Board {
 			int x = rand.nextInt(nX);
 			int y = rand.nextInt(nY);
 			Emergency emergency = new Emergency(new Point(x, y), Color.yellow);
+			emergencies.add(emergency);
 			board[x][y] = new Block(Shape.Emergency, emergency.color);
 			insertEntity(emergency, emergency.point);
+
+			// central receives the emergency request and selects nearest station
+			Station nearestStation = central.selectNearestStation(emergency);
+			System.out.println("nearest station: (" + nearestStation.point.x + "," + nearestStation.point.y + ")");
 			GUI.displayObject(emergency);
 			GUI.displayBoard();
 		}
