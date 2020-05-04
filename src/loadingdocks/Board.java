@@ -28,6 +28,7 @@ public class Board {
 
 	private static List<Station> stations;
 	private static List<Hospital> hospitals;
+	private static List<Ambulance> ambulances;
 
 	private static List<Emergency> emergencies;
 
@@ -59,6 +60,9 @@ public class Board {
 		hospitals.add(new Hospital(new Point(20, 7), Color.red));
 		hospitals.add(new Hospital(new Point(21, 9), Color.red));
 		hospitals.add(new Hospital(new Point(19, 10), Color.red));
+
+		ambulances = new ArrayList<>();
+		ambulances.add(new Ambulance(new Point(0, 0), Color.green, stations.get(0)));
 
 
 		/** A: create board */
@@ -101,11 +105,26 @@ public class Board {
 			board[h.point.x][h.point.y] = new Block(Shape.hospital, h.color);
 		}
 
+		for (Ambulance a : ambulances){
+			board[a.point.x][a.point.y] = new Block(Shape.station, a.color);
+		}
+
+
 		//Central central = new Central(stations, hospitals);
 
 		objects = new Entity[nX][nY];
 		for(Hospital hospital : hospitals) objects[hospital.point.x][hospital.point.y]=hospital;
 		for(Station station : stations) objects[station.point.x][station.point.y]=station;
+		for(Ambulance ambulance : ambulances) objects[ambulance.point.x][ambulance.point.y]=ambulance;
+
+
+		int x = rand.nextInt(nX);
+		int y = rand.nextInt(nY);
+		Emergency emergency = new Emergency(new Point(x, y), Color.yellow);
+		board[x][y] = new Block(Shape.Emergency, emergency.color);
+		insertEntity(emergency, emergency.point);
+
+		ambulances.get(0).rescue(emergency, hospitals.get(0));
 	}
 	
 	/****************************
@@ -172,6 +191,11 @@ public class Board {
 	public static void step() {
 		removeObjects();
 		//for(Agent a : robots) a.agentDecision();
+
+		for (Ambulance ambulance : ambulances) {
+			ambulance.decide();
+		}
+
 		displayObjects();
 		GUI.update();
 		stepCounter++;
@@ -183,23 +207,25 @@ public class Board {
 	}
 
 	public static void displayObjects(){
+		for (Ambulance ambulance : ambulances) GUI.displayObject(ambulance);
 		//for(Agent agent : robots) GUI.displayObject(agent);
 		//for(Box box : boxes) GUI.displayObject(box);
-		if (stepCounter % 5 == 0){
-			int x = rand.nextInt(nX);
-			int y = rand.nextInt(nY);
-			Emergency emergency = new Emergency(new Point(x, y), Color.yellow);
-			board[x][y] = new Block(Shape.Emergency, emergency.color);
-			insertEntity(emergency, emergency.point);
-			GUI.displayObject(emergency);
-			GUI.displayBoard();
-		}
+//		if (stepCounter % 5 == 0){
+//			int x = rand.nextInt(nX);
+//			int y = rand.nextInt(nY);
+//			Emergency emergency = new Emergency(new Point(x, y), Color.yellow);
+//			board[x][y] = new Block(Shape.Emergency, emergency.color);
+//			insertEntity(emergency, emergency.point);
+//			GUI.displayObject(emergency);
+//			GUI.displayBoard();
+//		}
 	}
 	
 	public static void removeObjects(){
 //		for(Agent agent : robots) GUI.removeObject(agent);
 //		for(Box box : boxes) GUI.removeObject(box);
 		for(Station s: stations) GUI.removeObject(s);
+		for(Ambulance ambulance: ambulances) GUI.removeObject(ambulance);
 	}
 	
 	public static void associateGUI(GUI graphicalInterface) {
