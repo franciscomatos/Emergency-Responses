@@ -2,23 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7dd5fa1d-dcfe-4e37-b655-f22e39198139" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/META-INF/loadingdocks.kotlin_module" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/loadingdocks/Agent.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/loadingdocks/Agent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/loadingdocks/Board$RunThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/loadingdocks/Board$RunThread.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/loadingdocks/Board.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/loadingdocks/Board.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/loadingdocks/Central.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/loadingdocks/Central.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/loadingdocks/GUI$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/loadingdocks/GUI$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/loadingdocks/GUI$Cell.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/loadingdocks/GUI$Cell.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/loadingdocks/GUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/loadingdocks/GUI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/loadingdocks/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/loadingdocks/Main$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/loadingdocks/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/loadingdocks/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/loadingdocks/Station.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/loadingdocks/Station.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/Central.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Central.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/Station.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Station.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
