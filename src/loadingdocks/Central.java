@@ -32,6 +32,7 @@ public class Central {
         // simply selecting the nearest isn't enough since that station can be occupied
         // when this happens the request is forwarded to the next nearest station, and so on.
         Collections.sort(stations);
+        Collections.sort(hospitals);
 
         for(int i = 0; i < stations.size(); i++) {
             Station currentNearestStation = stations.get(i);
@@ -39,11 +40,12 @@ public class Central {
             System.out.println("available ambulances: " + currentNearestStation.availableAmbulances);
             if(currentNearestStation.canReceiveEmergency()) {
                 System.out.println("can receive emergency");
-                currentNearestStation.assistEmergency();
+                currentNearestStation.assistEmergency(e, hospitals.get(0));
                 return currentNearestStation;
             }
             System.out.println("can't receive emergency");
         }
+
         // if the method reaches this point it means there are no available ambulances, so the request needs to be kept in a queue
         return null;
     }

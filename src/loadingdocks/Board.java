@@ -48,10 +48,10 @@ public class Board {
 		* Create stations
 		* */
 		stations = new ArrayList<>();
-		stations.add(new Station(new Point(2, 2), Color.blue));
-		stations.add(new Station(new Point(1, 3), Color.blue));
-		stations.add(new Station(new Point(19, 4), Color.blue));
-		stations.add(new Station(new Point(28, 16), Color.blue));
+		stations.add(new Station(new Point(2, 2), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(1, 3), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(19, 4), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(28, 16), Color.blue, 2, 2 ,2));
 
 		/**
 		 * Create Hospitals
@@ -73,7 +73,11 @@ public class Board {
 		central = new Central(stations, hospitals);
 
 		ambulances = new ArrayList<>();
-		ambulances.add(new Ambulance(new Point(0, 0), Color.green, stations.get(0)));
+
+		for(Station station : stations){
+			ambulances.addAll(station.getAmbulances());
+		}
+		//ambulances.add(new Ambulance(new Point(0, 0), Color.green, stations.get(0)));
 
 
 		/** A: create board */
@@ -114,6 +118,7 @@ public class Board {
 		}
 
 		for (Hospital h : hospitals){
+			h.setCentral(central);
 			board[h.point.x][h.point.y] = new Block(Shape.hospital, h.color);
 		}
 
@@ -130,14 +135,6 @@ public class Board {
 		for(Station station : stations) objects[station.point.x][station.point.y]=station;
 		for(Ambulance ambulance : ambulances) objects[ambulance.point.x][ambulance.point.y]=ambulance;
 
-
-		int x = rand.nextInt(nX);
-		int y = rand.nextInt(nY);
-		Emergency emergency = new Emergency(new Point(x, y), Color.yellow);
-		board[x][y] = new Block(Shape.Emergency, emergency.color);
-		insertEntity(emergency, emergency.point);
-
-		ambulances.get(0).rescue(emergency, hospitals.get(0));
 	}
 	
 	/****************************
@@ -235,8 +232,9 @@ public class Board {
 			Station nearestStation = central.selectNearestStation(emergency);
 			System.out.println("nearest station: (" + nearestStation.point.x + "," + nearestStation.point.y + ")");
 			GUI.displayObject(emergency);
-			GUI.displayBoard();
+
 		}
+		GUI.displayBoard();
 	}
 	
 	public static void removeObjects(){
