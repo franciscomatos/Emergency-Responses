@@ -3,15 +3,13 @@ package loadingdocks;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 
 /**
@@ -36,6 +34,7 @@ public class GUI extends JFrame {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+
             for(Entity entity : entities) {
 	            g.setColor(entity.color);
 	            if(entity instanceof Box) {
@@ -60,7 +59,7 @@ public class GUI extends JFrame {
 		setLayout(null);
 		setSize(555, 625);
 		add(createButtonPanel());
-		
+
 		Board.initialize();
 		Board.associateGUI(this);
 		
@@ -70,7 +69,8 @@ public class GUI extends JFrame {
 		
 		nX = Board.nX;
 		nY = Board.nY;
-		boardPanel.setLayout(new GridLayout(nX,nY));
+		GridLayout grid = new GridLayout(nX,nY);
+		boardPanel.setLayout(grid);
 		for(int i=0; i<nX; i++)
 			for(int j=0; j<nY; j++)
 				boardPanel.add(new Cell());
