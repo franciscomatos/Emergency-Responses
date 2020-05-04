@@ -19,7 +19,7 @@ import javax.swing.*;
 public class GUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	static JTextField speed;
 	static JPanel boardPanel;
 	static JButton run, reset, step;
@@ -28,9 +28,9 @@ public class GUI extends JFrame {
 	public class Cell extends JPanel {
 
 		private static final long serialVersionUID = 1L;
-		
+
 		public List<Entity> entities = new ArrayList<Entity>();
-		
+
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -43,7 +43,9 @@ public class GUI extends JFrame {
 					g.drawRect(15, 15, 20, 20);
 				}
 	            else{
-					g.fillPolygon(new int[]{10, 25, 40}, new int[]{40, 10, 40}, 3);
+	            	// draw a triangle. min value is [1, 4, 4],[3,1,4].
+					// this is manually adjusted!
+					g.fillPolygon(new int[]{4, 16, 16}, new int[]{12, 4, 16}, 3);
 //	            } else {
 //	        		switch(((Agent)entity).direction) {
 //		    			case 0:  g.fillPolygon(new int[]{10, 25, 40}, new int[]{40, 10, 40}, 3); break;
@@ -57,7 +59,7 @@ public class GUI extends JFrame {
 	}
 
 	public GUI() {
-		setTitle("FirePrevention");		
+		setTitle("FirePrevention");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
 		setSize(555, 625);
@@ -65,11 +67,11 @@ public class GUI extends JFrame {
 
 		Board.initialize();
 		Board.associateGUI(this);
-		
+
 		boardPanel = new JPanel();
 		boardPanel.setSize(new Dimension(500,500));
 		boardPanel.setLocation(new Point(20,60));
-		
+
 		nX = Board.nX;
 		nY = Board.nY;
 		GridLayout grid = new GridLayout(nX,nY);
@@ -77,7 +79,7 @@ public class GUI extends JFrame {
 		for(int i=0; i<nX; i++)
 			for(int j=0; j<nY; j++)
 				boardPanel.add(new Cell());
-		
+
 		displayBoard();
 		Board.displayObjects();
 		update();
@@ -95,18 +97,18 @@ public class GUI extends JFrame {
 			}
 		}
 	}
-	
+
 	public void removeObject(Entity object) {
 		int row=nY-object.point.y-1, col=object.point.x;
 		Cell p = (Cell)boardPanel.getComponent(row*nX+col);
-		p.setBorder(BorderFactory.createLineBorder(Color.white));			
+		p.setBorder(BorderFactory.createLineBorder(Color.white));
 		p.entities.remove(object);
 	}
-	
+
 	public void displayObject(Entity object) {
 		int row=nY-object.point.y-1, col=object.point.x;
 		Cell p = (Cell)boardPanel.getComponent(row*nX+col);
-		p.setBorder(BorderFactory.createLineBorder(Color.white));			
+		p.setBorder(BorderFactory.createLineBorder(Color.white));
 		p.entities.add(object);
 	}
 
@@ -118,7 +120,7 @@ public class GUI extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setSize(new Dimension(600,50));
 		panel.setLocation(new Point(0,0));
-		
+
 		step = new JButton("Step");
 		panel.add(step);
 		step.addActionListener(new ActionListener() {
@@ -149,7 +151,7 @@ public class GUI extends JFrame {
 					}
 					if(time>0){
 						Board.run(time);
-	 					run.setText("Stop");						
+	 					run.setText("Stop");
 					}
  				} else {
 					Board.stop();
@@ -160,7 +162,7 @@ public class GUI extends JFrame {
 		speed = new JTextField(" time per step in [1,100] ");
 		speed.setMargin(new Insets(5,5,5,5));
 		panel.add(speed);
-		
+
 		return panel;
 	}
 }

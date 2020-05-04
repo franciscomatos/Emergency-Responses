@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class Hospital extends Entity implements Comparable<Hospital>{
 
-    private Central central;
+    public Central central;
     public Hospital(Point point, Color color) {
         super (point, color);
     }

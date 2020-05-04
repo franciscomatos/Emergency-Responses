@@ -21,10 +21,7 @@ public class Station extends Entity implements Comparable<Station>{
     public int redAmbulances;
     public int yellowAmbulances;
 
-    private Central central;
-
-    // hardcoded for testing purposes
-    public Integer availableAmbulances = 2;
+    public Central central;
 
     public Station(Point point, Color color, int blueAmbulances, int redAmbulances, int yellowAmbulances){
 
@@ -144,7 +141,6 @@ public class Station extends Entity implements Comparable<Station>{
     public Ambulance selectAmbulance(){
 
         if (blueAmbulancesAvailable() > 0){
-            // TODO: Code refactor. code too messy
             for (Ambulance _ambulance : ambulanceList.keySet()){
                 if (ambulanceList.get(_ambulance) == AmbulanceType.blue && emergencyRequests.get(_ambulance) == null){
                     return _ambulance;
@@ -152,7 +148,6 @@ public class Station extends Entity implements Comparable<Station>{
             }
         }
         else if (yellowAmbulancesAvailable() > 0){
-            // TODO: Code refactor. code too messy
             for (Ambulance _ambulance : ambulanceList.keySet()){
                 if (ambulanceList.get(_ambulance) == AmbulanceType.yellow && emergencyRequests.get(_ambulance) == null){
                     return _ambulance;
@@ -160,7 +155,6 @@ public class Station extends Entity implements Comparable<Station>{
             }
         }
         else if (redAmbulancesAvailable() > 0){
-            // TODO: Code refactor. code too messy
             for (Ambulance _ambulance : ambulanceList.keySet()){
                 if (ambulanceList.get(_ambulance) == AmbulanceType.red && emergencyRequests.get(_ambulance) == null){
                     return _ambulance;
@@ -189,20 +183,15 @@ public class Station extends Entity implements Comparable<Station>{
 
     public Boolean canReceiveEmergency() {
         return availableAmbulances() > 0;
-//        // available ambulances => availableAmbulances.size()
-//        if (availableAmbulances > 0)
-//            return true;
-//        return false;
     }
 
     // right now this method simply decreases a counter for testing purposes
     public void assistEmergency(Emergency emergency, Hospital hospital) {
         //TODO: CHANGE THIS METHOD!!!!!!!!
         Ambulance ambulance = selectAmbulance();
-        ambulance.rescue(emergency, hospital);
-        availableAmbulances -= 1;
         addEmergency(emergency);
         startEmergencyRequest(ambulance, emergency);
+        ambulance.rescue(emergency, hospital);
     }
 
     public Integer manhattanDistance(Point a, Point b) {

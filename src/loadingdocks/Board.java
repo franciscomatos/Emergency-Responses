@@ -82,8 +82,8 @@ public class Board {
 
 		/** A: create board */
 		board = new Block[nX][nY];
-		for(int i=0; i<nX; i++) 
-			for(int j=0; j<nY; j++) 
+		for(int i=0; i<nX; i++)
+			for(int j=0; j<nY; j++)
 				board[i][j] = new Block(Shape.free, Color.lightGray);
 
 //
@@ -150,7 +150,7 @@ public class Board {
 	public static void updateEntityPosition(Point point, Point newpoint) {
 		objects[newpoint.x][newpoint.y] = objects[point.x][point.y];
 		objects[point.x][point.y] = null;
-	}	
+	}
 	public static void removeEntity(Point point) {
 		objects[point.x][point.y] = null;
 	}
@@ -232,9 +232,9 @@ public class Board {
 			Station nearestStation = central.selectNearestStation(emergency);
 			System.out.println("nearest station: (" + nearestStation.point.x + "," + nearestStation.point.y + ")");
 			GUI.displayObject(emergency);
-
+			GUI.displayBoard();
 		}
-		GUI.displayBoard();
+
 	}
 	
 	public static void removeObjects(){

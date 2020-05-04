@@ -37,7 +37,7 @@ public class Central {
         for(int i = 0; i < stations.size(); i++) {
             Station currentNearestStation = stations.get(i);
             System.out.println("nearest station is at: (" + currentNearestStation.point.x + "," + currentNearestStation.point.y + ")");
-            System.out.println("available ambulances: " + currentNearestStation.availableAmbulances);
+            System.out.println("available ambulances: " + currentNearestStation.availableAmbulances());
             if(currentNearestStation.canReceiveEmergency()) {
                 System.out.println("can receive emergency");
                 currentNearestStation.assistEmergency(e, hospitals.get(0));
