@@ -11,7 +11,7 @@ public class Station extends Entity implements Comparable<Station>{
     public enum Action { SelectAmbulance, SendAmbulance, RefuseRequest}
     public enum AmbulanceType { blue, yellow, red}
 
-    public HashMap<Ambulance, AmbulanceType> ambulanceList = new HashMap<>();
+    public HashMap<Ambulance, AmbulanceType> ambulanceList = new HashMap<Ambulance, AmbulanceType>();
 
     public HashMap<Ambulance, Emergency> emergencyRequests = new HashMap<Ambulance, Emergency>();
 
@@ -31,15 +31,15 @@ public class Station extends Entity implements Comparable<Station>{
         this.yellowAmbulances = yellowAmbulances;
 
         for(int i = 0; i < blueAmbulances; i++){
-            ambulanceList.put(new Ambulance(new Point(point.x, point.y), color, this), AmbulanceType.blue);
+            ambulanceList.put(new Ambulance(new Point(point.x, point.y), Color.blue, this), AmbulanceType.blue);
         }
 
         for(int i = 0; i < redAmbulances; i++){
-            ambulanceList.put(new Ambulance(new Point(point.x, point.y), color, this), AmbulanceType.red);
+            ambulanceList.put(new Ambulance(new Point(point.x, point.y), Color.red, this), AmbulanceType.red);
         }
 
         for(int i = 0; i < yellowAmbulances; i++){
-            ambulanceList.put(new Ambulance(new Point(point.x, point.y), color, this), AmbulanceType.yellow);
+            ambulanceList.put(new Ambulance(new Point(point.x, point.y), Color.yellow, this), AmbulanceType.yellow);
         }
     }
 
@@ -81,7 +81,7 @@ public class Station extends Entity implements Comparable<Station>{
     }
 
     public void stationPerception(){
-        if (hasEmergency()){
+        if (availableAmbulances() > 0){
             stationDecision();
         }
     }
@@ -96,7 +96,7 @@ public class Station extends Entity implements Comparable<Station>{
     }
 
     public int availableAmbulances(){
-        return ambulanceList.size() - emergencyRequests.keySet().size();
+        return ambulanceList.size() - emergencyRequests.size();
     }
 
     public boolean hasEmergency(){
@@ -187,7 +187,6 @@ public class Station extends Entity implements Comparable<Station>{
 
     // right now this method simply decreases a counter for testing purposes
     public void assistEmergency(Emergency emergency, Hospital hospital) {
-        //TODO: CHANGE THIS METHOD!!!!!!!!
         Ambulance ambulance = selectAmbulance();
         addEmergency(emergency);
         startEmergencyRequest(ambulance, emergency);

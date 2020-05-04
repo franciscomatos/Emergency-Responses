@@ -33,27 +33,31 @@ public class GUI extends JFrame {
 
         @Override
         protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
+			super.paintComponent(g);
 
             for(Entity entity : entities) {
 	            g.setColor(entity.color);
-	            if(entity instanceof Box) {
-					g.fillRect(15, 15, 20, 20);
-					g.setColor(Color.white);
-					g.drawRect(15, 15, 20, 20);
-				}
-	            else{
-	            	// draw a triangle. min value is [1, 4, 4],[3,1,4].
+	            if (entity instanceof Ambulance){
+					// draw a triangle. min value is [1, 4, 4],[3,1,4].
 					// this is manually adjusted!
 					g.fillPolygon(new int[]{4, 16, 16}, new int[]{12, 4, 16}, 3);
-//	            } else {
+				}
+//				else if (entity instanceof Emergency){
+//	            	g.setColor(Color.ORANGE);
+//	            	g.fillOval(1, 1, 200, 200);
+//				}
+//	            if(entity instanceof Box) {
+//					g.fillRect(15, 15, 20, 20);
+//					g.setColor(Color.white);
+//					g.drawRect(15, 15, 20, 20);
+//				} else {
 //	        		switch(((Agent)entity).direction) {
 //		    			case 0:  g.fillPolygon(new int[]{10, 25, 40}, new int[]{40, 10, 40}, 3); break;
 //		    			case 90: g.fillPolygon(new int[]{10, 40, 10}, new int[]{10, 25, 40}, 3); break;
 //		    			case 180:g.fillPolygon(new int[]{10, 40, 25}, new int[]{10, 10, 40}, 3); break;
 //		    			default: g.fillPolygon(new int[]{10, 40, 40}, new int[]{25, 10, 40}, 3);
 //		    		}
-	            }
+//	            }
             }
         }
 	}

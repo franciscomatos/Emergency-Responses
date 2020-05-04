@@ -77,7 +77,6 @@ public class Board {
 		for(Station station : stations){
 			ambulances.addAll(station.getAmbulances());
 		}
-		//ambulances.add(new Ambulance(new Point(0, 0), Color.green, stations.get(0)));
 
 
 		/** A: create board */
@@ -127,9 +126,6 @@ public class Board {
 		}
 
 
-		//Central central = new Central(stations, hospitals);
-
-
 		objects = new Entity[nX][nY];
 		for(Hospital hospital : hospitals) objects[hospital.point.x][hospital.point.y]=hospital;
 		for(Station station : stations) objects[station.point.x][station.point.y]=station;
@@ -146,6 +142,9 @@ public class Board {
 	}
 	public static Block getBlock(Point point) {
 		return board[point.x][point.y];
+	}
+	public static void removeBlock(Point point) {
+		board[point.x][point.y] = new Block(Shape.free, Color.lightGray);
 	}
 	public static void updateEntityPosition(Point point, Point newpoint) {
 		objects[newpoint.x][newpoint.y] = objects[point.x][point.y];
@@ -218,21 +217,24 @@ public class Board {
 
 	public static void displayObjects(){
 		for (Ambulance ambulance : ambulances) GUI.displayObject(ambulance);
+		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
 		//for(Agent agent : robots) GUI.displayObject(agent);
 		//for(Box box : boxes) GUI.displayObject(box);
 		if (stepCounter % 5 == 0){
 			int x = rand.nextInt(nX);
 			int y = rand.nextInt(nY);
-			Emergency emergency = new Emergency(new Point(x, y), Color.yellow);
+			Emergency emergency = new Emergency(new Point(x, y), Color.ORANGE);
 			emergencies.add(emergency);
-			board[x][y] = new Block(Shape.Emergency, emergency.color);
-			insertEntity(emergency, emergency.point);
+			if (board[x][y].shape == Shape.free){
+				board[x][y] = new Block(Shape.Emergency, emergency.color);
+				insertEntity(emergency, emergency.point);
 
-			// central receives the emergency request and selects nearest station
-			Station nearestStation = central.selectNearestStation(emergency);
-			System.out.println("nearest station: (" + nearestStation.point.x + "," + nearestStation.point.y + ")");
-			GUI.displayObject(emergency);
-			GUI.displayBoard();
+				// central receives the emergency request and selects nearest station
+				Station nearestStation = central.selectNearestStation(emergency);
+				System.out.println("nearest station: (" + nearestStation.point.x + "," + nearestStation.point.y + ")");
+				GUI.displayObject(emergency);
+				GUI.displayBoard();
+			}
 		}
 
 	}
@@ -240,7 +242,8 @@ public class Board {
 	public static void removeObjects(){
 //		for(Agent agent : robots) GUI.removeObject(agent);
 //		for(Box box : boxes) GUI.removeObject(box);
-		for(Station s: stations) GUI.removeObject(s);
+//		for(Station s: stations) GUI.removeObject(s);
+		for(Emergency emergency: emergencies) GUI.removeObject(emergency);
 		for(Ambulance ambulance: ambulances) GUI.removeObject(ambulance);
 	}
 	

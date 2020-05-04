@@ -34,6 +34,9 @@ public class Ambulance extends Entity {
         else if (!_available && _patient && this.point.equals(_hospital.point)) {
             System.out.println("Dropped patient");
             dropPatient();
+            Board.removeBlock(_emergency.point);
+            this._station.finishEmergencyRequest(this);
+            this._station.removeEmergency(_emergency);
         }
         else if (!_available || _available && !this.point.equals((_station.point))) {
             move();
