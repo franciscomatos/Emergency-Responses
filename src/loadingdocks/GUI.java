@@ -37,15 +37,23 @@ public class GUI extends JFrame {
 
             for(Entity entity : entities) {
 	            g.setColor(entity.color);
-	            if (entity instanceof Ambulance){
-					// draw a triangle. min value is [1, 4, 4],[3,1,4].
-					// this is manually adjusted!
-					g.fillPolygon(new int[]{4, 16, 16}, new int[]{12, 4, 16}, 3);
+	            if (entity instanceof Ambulance && !entity.point.equals(((Ambulance) entity).station.point)){
+	            	switch(((Ambulance) entity).direction) {
+						// draw a triangle. min value is [1, 4, 4],[3,1,4].
+						case N: g.fillPolygon(new int[]{2, 9, 15}, new int[]{9, 2, 9}, 3); break;
+						case S: g.fillPolygon(new int[]{2, 9, 15}, new int[]{2, 9, 2}, 3); break;
+		    			case E: g.fillPolygon(new int[]{2, 9, 2}, new int[]{2, 9, 15}, 3); break;
+		    			case O: g.fillPolygon(new int[]{15, 9, 15}, new int[]{2, 9, 15}, 3); break;
+						case NE: g.fillPolygon(new int[]{4, 15, 15}, new int[]{4, 4, 15}, 3); break;
+						case NO: g.fillPolygon(new int[]{4, 15, 4}, new int[]{4, 4, 15}, 3); break;
+						case SE: g.fillPolygon(new int[]{15, 4, 15}, new int[]{4, 15, 15}, 3); break;
+						default: g.fillPolygon(new int[]{4, 4, 15}, new int[]{4, 15, 15}, 3); break;
+					}
 				}
-//				else if (entity instanceof Emergency){
-//	            	g.setColor(Color.ORANGE);
-//	            	g.fillOval(1, 1, 200, 200);
-//				}
+				else if (entity instanceof Emergency){
+	            	g.setColor(Color.ORANGE);
+	            	g.fillOval(1, 1, 200, 200);
+				}
 //	            if(entity instanceof Box) {
 //					g.fillRect(15, 15, 20, 20);
 //					g.setColor(Color.white);

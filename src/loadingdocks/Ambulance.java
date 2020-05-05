@@ -3,17 +3,21 @@ package loadingdocks;
 import java.awt.*;
 
 public class Ambulance extends Entity {
-    private boolean _available;
-    private boolean _patient;
-    private Station _station;
-    private Emergency _emergency;
-    private Hospital _hospital;
+    public enum AmbulanceDirection {N, S, E, O, NE, NO, SE, SO}
+
+    public boolean available;
+    public boolean patient;
+    public Station station;
+    public Emergency emergency;
+    public Hospital hospital;
+    public AmbulanceDirection direction;
 
     public Ambulance (Point point, Color color, Station station) {
         super(point, color);
-        _available = true;
-        _patient = false;
-        _station = station;
+        this.available = true;
+        this.patient = false;
+        this.station = station;
+        this.direction = AmbulanceDirection.SO;
     }
 
     public void rescue(Emergency emergency, Hospital hospital) {
@@ -23,26 +27,19 @@ public class Ambulance extends Entity {
     }
 
     public void decide() {
-        //System.out.println("Patient " + _patient);
-        //System.out.println("Emergency " + _emergency.point);
-        //System.out.println("Hospital " + _hospital.point);
-
-        if (!_available && !_patient && this.point.equals(_emergency.point)) {
-            System.out.println("Picked up patient");
+        if (!this.available && !this.patient && this.point.equals(this.emergency.point)) {
+            System.out.println("Ambulance picked up patient");
             pickupPatient();
         }
-        else if (!_available && _patient && this.point.equals(_hospital.point)) {
-            System.out.println("Dropped patient");
+        else if (!this.available && this.patient && this.point.equals(this.hospital.point)) {
+            System.out.println("Ambulance dropped patient");
             dropPatient();
-            Board.removeBlock(_emergency.point);
-            this._station.finishEmergencyRequest(this);
-            this._station.removeEmergency(_emergency);
+            Board.removeBlock(this.emergency.point);
+            this.station.finishEmergencyRequest(this);
+            this.station.removeEmergency(this.emergency);
         }
-        else if (!_available || _available && !this.point.equals((_station.point))) {
+        else if (!this.available || this.available && !this.point.equals((this.station.point))) {
             move();
-        }
-        else {
-            System.out.println("At station");
         }
 
     }
@@ -51,19 +48,18 @@ public class Ambulance extends Entity {
         Point nextPosition = this.point;
         if (isAvailable()) {
             System.out.println("Moving to station");
-            nextPosition = nextPosition(_station.point);
+            nextPosition = nextPosition(this.station.point);
         }
-        else if (!isAvailable() && !_patient) {
+        else if (!isAvailable() && !this.patient) {
             System.out.println("Moving to patient");
-            nextPosition = nextPosition(_emergency.point);
+            nextPosition = nextPosition(this.emergency.point);
         }
-        else if (!isAvailable() && _patient) {
+        else if (!isAvailable() && this.patient) {
             System.out.println("Moving to hospital");
-            nextPosition = nextPosition(_hospital.point);
+            nextPosition = nextPosition(this.hospital.point);
         }
         Board.updateEntityPosition(this.point, nextPosition);
         this.point = nextPosition;
-        //System.out.println("Ambulance moved to " + this.point);
     }
 
     public void pickupPatient() {
@@ -84,42 +80,75 @@ public class Ambulance extends Entity {
         int dY = dest.y - this.point.y;
         int nextX = this.point.x + Integer.signum(dX);
         int nextY = this.point.y + Integer.signum(dY);
-        if (nextX == 0)
-            nextX = 1;
-        if (nextY == 0)
-            nextY = 1;
+        if (nextX == -1) {
+            nextX = 0;
+        }
+        if (nextY == -1) {
+            nextY = 0;
+        }
+        updateDirection(dX, dY, nextX, nextY);
         return new Point(nextX, nextY);
     }
 
+    public void updateDirection(int dX, int dY, int nextX, int nextY) {
+        int signX = Integer.signum(dX);
+        int signY = Integer.signum(dY);
+
+        if (signX == 0) {
+            if (signY > 0)
+                this.direction = AmbulanceDirection.N;
+            else if (signY < 0)
+                this.direction = AmbulanceDirection.S;
+        }
+        else if (signY == 0) {
+            if (signX > 0)
+                this.direction = AmbulanceDirection.E;
+            else if (signX < 0)
+                this.direction = AmbulanceDirection.O;
+        }
+        else if (signY > 0) {
+            if (signX > 0)
+                this.direction = AmbulanceDirection.NE;
+            else if (signX < 0)
+                this.direction = AmbulanceDirection.NO;
+        }
+        else if (signY < 0) {
+            if (signX > 0)
+                this.direction = AmbulanceDirection.SE;
+            else if (signX < 0)
+                this.direction = AmbulanceDirection.SO;
+        }
+    }
+
     public void setAvailable(boolean available) {
-        _available = available;
+        this.available = available;
     }
 
     public void setPatient(boolean patient) {
-        _patient = patient;
+        this.patient = patient;
     }
 
     public void setEmergency(Emergency emergency) {
-        _emergency = emergency;
+        this.emergency = emergency;
     }
 
     public void setHospital(Hospital hospital) {
-        _hospital = hospital;
+        this.hospital = hospital;
     }
 
     public boolean isAvailable() {
-        return _available;
+        return this.available;
     }
 
     public boolean isPatient() {
-        return _patient;
+        return this.patient;
     }
 
     public Emergency getEmergency() {
-        return _emergency;
+        return this.emergency;
     }
 
     public Hospital getHospital() {
-        return _hospital;
+        return this.hospital;
     }
 }
