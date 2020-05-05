@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6f3daf1-2bbd-4c10-8f63-9743d0e483dd" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/Ambulance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Ambulance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Block.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/loadingdocks/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/GUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,22 +57,22 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1567" height="269" key="GridCell.Tab.0.bottom" timestamp="1588700096401">
+    <state width="1567" height="269" key="GridCell.Tab.0.bottom" timestamp="1588702109066">
       <screen x="67" y="27" width="1613" height="1023" />
     </state>
-    <state width="1567" height="269" key="GridCell.Tab.0.bottom/67.27.1613.1023@67.27.1613.1023" timestamp="1588700096401" />
-    <state width="1567" height="269" key="GridCell.Tab.0.center" timestamp="1588700096400">
+    <state width="1567" height="269" key="GridCell.Tab.0.bottom/67.27.1613.1023@67.27.1613.1023" timestamp="1588702109066" />
+    <state width="1567" height="269" key="GridCell.Tab.0.center" timestamp="1588702109066">
       <screen x="67" y="27" width="1613" height="1023" />
     </state>
-    <state width="1567" height="269" key="GridCell.Tab.0.center/67.27.1613.1023@67.27.1613.1023" timestamp="1588700096400" />
-    <state width="1567" height="269" key="GridCell.Tab.0.left" timestamp="1588700096400">
+    <state width="1567" height="269" key="GridCell.Tab.0.center/67.27.1613.1023@67.27.1613.1023" timestamp="1588702109066" />
+    <state width="1567" height="269" key="GridCell.Tab.0.left" timestamp="1588702109066">
       <screen x="67" y="27" width="1613" height="1023" />
     </state>
-    <state width="1567" height="269" key="GridCell.Tab.0.left/67.27.1613.1023@67.27.1613.1023" timestamp="1588700096400" />
-    <state width="1567" height="269" key="GridCell.Tab.0.right" timestamp="1588700096400">
+    <state width="1567" height="269" key="GridCell.Tab.0.left/67.27.1613.1023@67.27.1613.1023" timestamp="1588702109066" />
+    <state width="1567" height="269" key="GridCell.Tab.0.right" timestamp="1588702109066">
       <screen x="67" y="27" width="1613" height="1023" />
     </state>
-    <state width="1567" height="269" key="GridCell.Tab.0.right/67.27.1613.1023@67.27.1613.1023" timestamp="1588700096400" />
+    <state width="1567" height="269" key="GridCell.Tab.0.right/67.27.1613.1023@67.27.1613.1023" timestamp="1588702109066" />
     <state width="1567" height="332" key="GridCell.Tab.1.bottom" timestamp="1588697719505">
       <screen x="67" y="27" width="1613" height="1023" />
     </state>
@@ -111,11 +104,6 @@
             <option name="EMULATED" value="true" />
           </properties>
           <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/loadingdocks/Board.java</url>
-          <line>84</line>
-          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

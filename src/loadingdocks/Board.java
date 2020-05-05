@@ -46,19 +46,29 @@ public class Board {
 		* Create stations
 		* */
 		stations = new ArrayList<>();
-		stations.add(new Station(new Point(2, 2), Color.blue, 2, 2 ,2));
-//		stations.add(new Station(new Point(1, 3), Color.blue, 2, 2 ,2));
-//		stations.add(new Station(new Point(19, 4), Color.blue, 2, 2 ,2));
-//		stations.add(new Station(new Point(28, 16), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(1, 3), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(7, 4), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(7, 15), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(19, 4), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(18, 8), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(22, 6), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(20, 11), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(20, 17), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(26, 17), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(28, 16), Color.blue, 2, 2 ,2));
 
 		/**
 		 * Create Hospitals
 		 * */
 		hospitals = new ArrayList<>();
+		hospitals.add(new Hospital(new Point(2, 2), Color.red));
 		hospitals.add(new Hospital(new Point(9, 1), Color.red));
 		hospitals.add(new Hospital(new Point(20, 7), Color.red));
 		hospitals.add(new Hospital(new Point(21, 9), Color.red));
 		hospitals.add(new Hospital(new Point(19, 10), Color.red));
+		hospitals.add(new Hospital(new Point(18, 13), Color.red));
+		hospitals.add(new Hospital(new Point(16, 15), Color.red));
+		hospitals.add(new Hospital(new Point(16, 20), Color.red));
 
 		/**
 		 * Initialize Emergencies
@@ -79,8 +89,9 @@ public class Board {
 		/** A: create board */
 		board = new Block[nX][nY];
 		for(int i=0; i<nX; i++)
-			for(int j=0; j<nY; j++)
-				board[i][j] = new Block(Shape.free, Color.lightGray);
+			for(int j=0; j<nY; j++) {
+				board[i][j] = new Block(Shape.free, getCellBgColor(i, j));
+			}
 
 		for (Station s : stations){
 			s.setCentral(central);
@@ -108,7 +119,7 @@ public class Board {
 		return board[point.x][point.y];
 	}
 	public static void removeBlock(Point point) {
-		board[point.x][point.y] = new Block(Shape.free, Color.lightGray);
+		board[point.x][point.y] = new Block(Shape.free, getCellBgColor(point.x, point.y));
 	}
 	public static void updateEntityPosition(Point point, Point newpoint) {
 		objects[newpoint.x][newpoint.y] = objects[point.x][point.y];
@@ -119,6 +130,18 @@ public class Board {
 	}
 	public static void insertEntity(Entity entity, Point point) {
 		objects[point.x][point.y] = entity;
+	}
+
+	public static Color getCellBgColor(int i, int j) {
+		if ( (j == 0 && i >= 13) || ( j <= 1 && i >= 17) || ( j <= 2 && i >= 24) || ( j <= 4 && i >= 25) ||
+				( j <= 5 && i >= 26) || ( j <= 7 && i >= 27) || ( j <= 8 && i >= 29))
+			return new Color(146, 230, 245);
+		else return Color.lightGray;
+	}
+
+	public static boolean invalidPoint(int i, int j) {
+		return ((j < 0 || i < 0) || (j == 0 && i >= 13) || ( j <= 1 && i >= 17) || ( j <= 2 && i >= 24) || ( j <= 4 && i >= 25) ||
+				( j <= 5 && i >= 26) || ( j <= 7 && i >= 27) || ( j <= 8 && i >= 29));
 	}
 
 	/***********************************
@@ -184,9 +207,13 @@ public class Board {
 		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
 		//for(Agent agent : robots) GUI.displayObject(agent);
 		//for(Box box : boxes) GUI.displayObject(box);
-		if (stepCounter % 5 == 0){
-			int x = rand.nextInt(nX);
-			int y = rand.nextInt(nY);
+		if (stepCounter % 2 == 0){
+			int x = -1;
+			int y = -1;
+			while (invalidPoint(x, y)) {
+				x = rand.nextInt(nX);
+				y = rand.nextInt(nY);
+			}
 			Emergency emergency = new Emergency(new Point(x, y), Color.ORANGE);
 			emergencies.add(emergency);
 			if (board[x][y].shape == Shape.free){
