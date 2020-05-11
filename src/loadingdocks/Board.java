@@ -46,16 +46,16 @@ public class Board {
 		* Create stations
 		* */
 		stations = new ArrayList<>();
-		stations.add(new Station(new Point(1, 3), Color.blue, 2, 2 ,2));
-		stations.add(new Station(new Point(7, 4), Color.blue, 2, 2 ,2));
-		stations.add(new Station(new Point(7, 15), Color.blue, 2, 2 ,2));
-		stations.add(new Station(new Point(19, 4), Color.blue, 2, 2 ,2));
-		stations.add(new Station(new Point(18, 8), Color.blue, 2, 2 ,2));
-		stations.add(new Station(new Point(22, 6), Color.blue, 2, 2 ,2));
-		stations.add(new Station(new Point(20, 11), Color.blue, 2, 2 ,2));
-		stations.add(new Station(new Point(20, 17), Color.blue, 2, 2 ,2));
-		stations.add(new Station(new Point(26, 17), Color.blue, 2, 2 ,2));
-		stations.add(new Station(new Point(28, 16), Color.blue, 2, 2 ,2));
+		stations.add(new Station(new Point(1, 3), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(7, 4), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(7, 15), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(19, 4), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(18, 8), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(22, 6), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(20, 11), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(20, 17), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(26, 17), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(28, 16), Color.blue, 0, 0, 0));
 
 		/**
 		 * Create Hospitals
@@ -221,8 +221,8 @@ public class Board {
 				insertEntity(emergency, emergency.point);
 
 				// central receives the emergency request and selects nearest station
-				Station nearestStation = central.selectNearestStation(emergency);
-				System.out.println("nearest station: (" + nearestStation.point.x + "," + nearestStation.point.y + ")");
+				central.addEmergencyToQueue(emergency);
+				central.selectNearestStation();
 				GUI.displayObject(emergency);
 				GUI.displayBoard();
 			}
