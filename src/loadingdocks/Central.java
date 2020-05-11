@@ -41,6 +41,26 @@ public class Central {
         // when this happens the request is forwarded to the next nearest station, and so on.
         Collections.sort(stations);
         Collections.sort(hospitals);
+        Hospital decidedHospital = null;
+
+        for(int i = 0; i < hospitals.size(); i++) {
+            Hospital currentNearestHospital = hospitals.get(i);
+            System.out.println("nearest hospital is at: (" + currentNearestHospital.point.x + "," + currentNearestHospital.point.y + ")");
+            System.out.println("Lotation: " + currentNearestHospital.getLotation());
+            if(currentNearestHospital.canReceivePatient()) {
+                System.out.println("can receive patient");
+                decidedHospital = currentNearestHospital;
+                decidedHospital.decreaseLotation();
+                break;
+            }
+        }
+
+        // if there is no available hospital the request stays in the queue
+        if (decidedHospital == null) {
+            System.out.println("can't receive emergency due to the lack of hospitals. Emergency will be kept in queue");
+            System.out.println("queue size: " + emergencies.size());
+            return;
+        }
 
         for(int i = 0; i < stations.size(); i++) {
             Station currentNearestStation = stations.get(i);
@@ -48,12 +68,12 @@ public class Central {
             System.out.println("available ambulances: " + currentNearestStation.availableAmbulances());
             if(currentNearestStation.canReceiveEmergency()) {
                 System.out.println("can receive emergency");
-                currentNearestStation.assistEmergency(getCurrentEmergency(), hospitals.get(0));
+                currentNearestStation.assistEmergency(getCurrentEmergency(), decidedHospital);
                 removeEmergencyFromQueue();
                 return;
             }
         }
-        System.out.println("can't receive emergency. Emergency will be kept in queue");
+        System.out.println("can't receive emergency due to the lack of ambulances. Emergency will be kept in queue");
         System.out.println("queue size: " + emergencies.size());
 
         // if the method reaches this point it means there are no available ambulances, so the request needs to be kept in a queue

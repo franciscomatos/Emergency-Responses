@@ -46,29 +46,29 @@ public class Board {
 		* Create stations
 		* */
 		stations = new ArrayList<>();
-		stations.add(new Station(new Point(1, 3), Color.blue, 0, 0, 0));
-		stations.add(new Station(new Point(7, 4), Color.blue, 0, 0, 0));
-		stations.add(new Station(new Point(7, 15), Color.blue, 0, 0, 0));
-		stations.add(new Station(new Point(19, 4), Color.blue, 0, 0, 0));
-		stations.add(new Station(new Point(18, 8), Color.blue, 0, 0, 0));
-		stations.add(new Station(new Point(22, 6), Color.blue, 0, 0, 0));
-		stations.add(new Station(new Point(20, 11), Color.blue, 0, 0, 0));
-		stations.add(new Station(new Point(20, 17), Color.blue, 0, 0, 0));
-		stations.add(new Station(new Point(26, 17), Color.blue, 0, 0, 0));
-		stations.add(new Station(new Point(28, 16), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(1, 3), Color.blue, 1, 0, 0));
+		stations.add(new Station(new Point(7, 4), Color.blue, 1, 0, 0));
+		stations.add(new Station(new Point(7, 15), Color.blue, 1, 0, 0));
+		stations.add(new Station(new Point(19, 4), Color.blue, 1, 0, 0));
+		stations.add(new Station(new Point(18, 8), Color.blue, 1, 0, 0));
+		stations.add(new Station(new Point(22, 6), Color.blue, 1, 0, 0));
+		stations.add(new Station(new Point(20, 11), Color.blue, 1, 0, 0));
+		stations.add(new Station(new Point(20, 17), Color.blue, 1, 0, 0));
+		stations.add(new Station(new Point(26, 17), Color.blue, 1, 0, 0));
+		stations.add(new Station(new Point(28, 16), Color.blue, 1, 0, 0));
 
 		/**
 		 * Create Hospitals
 		 * */
 		hospitals = new ArrayList<>();
-		hospitals.add(new Hospital(new Point(2, 2), Color.red));
-		hospitals.add(new Hospital(new Point(9, 1), Color.red));
-		hospitals.add(new Hospital(new Point(20, 7), Color.red));
-		hospitals.add(new Hospital(new Point(21, 9), Color.red));
-		hospitals.add(new Hospital(new Point(19, 10), Color.red));
-		hospitals.add(new Hospital(new Point(18, 13), Color.red));
-		hospitals.add(new Hospital(new Point(16, 15), Color.red));
-		hospitals.add(new Hospital(new Point(16, 20), Color.red));
+		hospitals.add(new Hospital(new Point(2, 2), Color.red, 1));
+		hospitals.add(new Hospital(new Point(9, 1), Color.red, 1));
+		hospitals.add(new Hospital(new Point(20, 7), Color.red, 1));
+		hospitals.add(new Hospital(new Point(21, 9), Color.red, 1));
+		hospitals.add(new Hospital(new Point(19, 10), Color.red, 1));
+		hospitals.add(new Hospital(new Point(18, 13), Color.red, 1));
+		hospitals.add(new Hospital(new Point(16, 15), Color.red, 1));
+		hospitals.add(new Hospital(new Point(16, 20), Color.red, 1));
 
 		/**
 		 * Initialize Emergencies
@@ -207,6 +207,10 @@ public class Board {
 		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
 		//for(Agent agent : robots) GUI.displayObject(agent);
 		//for(Box box : boxes) GUI.displayObject(box);
+		if (stepCounter % 10 == 0)
+			for(Hospital hospital: hospitals)
+				hospital.increaseLotation();
+
 		if (stepCounter % 2 == 0){
 			int x = -1;
 			int y = -1;
