@@ -49,13 +49,13 @@ public class Board {
 		stations.add(new Station(new Point(1, 3), Color.blue, 1, 0, 0));
 		stations.add(new Station(new Point(7, 4), Color.blue, 1, 0, 0));
 		stations.add(new Station(new Point(7, 15), Color.blue, 1, 0, 0));
-		stations.add(new Station(new Point(19, 4), Color.blue, 1, 0, 0));
-		stations.add(new Station(new Point(18, 8), Color.blue, 1, 0, 0));
-		stations.add(new Station(new Point(22, 6), Color.blue, 1, 0, 0));
-		stations.add(new Station(new Point(20, 11), Color.blue, 1, 0, 0));
-		stations.add(new Station(new Point(20, 17), Color.blue, 1, 0, 0));
-		stations.add(new Station(new Point(26, 17), Color.blue, 1, 0, 0));
-		stations.add(new Station(new Point(28, 16), Color.blue, 1, 0, 0));
+		stations.add(new Station(new Point(19, 4), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(18, 8), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(22, 6), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(20, 11), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(20, 17), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(26, 17), Color.blue, 0, 0, 0));
+		stations.add(new Station(new Point(28, 16), Color.blue, 0, 0, 0));
 
 		/**
 		 * Create Hospitals
@@ -203,8 +203,6 @@ public class Board {
 	}
 
 	public static void displayObjects(){
-		for (Ambulance ambulance : ambulances) GUI.displayObject(ambulance);
-		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
 		//for(Agent agent : robots) GUI.displayObject(agent);
 		//for(Box box : boxes) GUI.displayObject(box);
 		if (stepCounter % 10 == 0)
@@ -226,12 +224,13 @@ public class Board {
 
 				// central receives the emergency request and selects nearest station
 				central.addEmergencyToQueue(emergency);
-				central.selectNearestStation();
 				GUI.displayObject(emergency);
 				GUI.displayBoard();
 			}
 		}
-
+		central.selectNearestStation();
+		for (Ambulance ambulance : ambulances) GUI.displayObject(ambulance);
+		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
 	}
 	
 	public static void removeObjects(){

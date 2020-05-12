@@ -34,6 +34,10 @@ public class Central {
     public void removeEmergencyFromQueue() { this.emergencies.poll(); }
 
     public void selectNearestStation() {
+        if(getCurrentEmergency() == null) {
+            System.out.println("no current emergencies to handle");
+            return;
+        }
         System.out.println("gonna handle emergency at: (" + getCurrentEmergency().point.x + "," + getCurrentEmergency().point.y + ")");
         //currentEmergency = e;
         // we sort according according to the manhattan distance to the emergency
@@ -68,8 +72,10 @@ public class Central {
             System.out.println("available ambulances: " + currentNearestStation.availableAmbulances());
             if(currentNearestStation.canReceiveEmergency()) {
                 System.out.println("can receive emergency");
+                System.out.println("closest ambulance: (" + currentNearestStation.closestAmbulance.point.x + "," + currentNearestStation.closestAmbulance.point.y + ")");
                 currentNearestStation.assistEmergency(getCurrentEmergency(), decidedHospital);
                 removeEmergencyFromQueue();
+                System.out.println("queue size: " + emergencies.size());
                 return;
             }
         }
