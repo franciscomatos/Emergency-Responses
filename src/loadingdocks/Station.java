@@ -23,6 +23,8 @@ public class Station extends Entity implements Comparable<Station>{
 
     public Central central;
 
+    public Ambulance closestAmbulance;
+
     public Station(Point point, Color color, int blueAmbulances, int redAmbulances, int yellowAmbulances){
 
         super(point, color);
@@ -187,14 +189,34 @@ public class Station extends Entity implements Comparable<Station>{
 
     // right now this method simply decreases a counter for testing purposes
     public void assistEmergency(Emergency emergency, Hospital hospital) {
-        Ambulance ambulance = selectAmbulance();
+        //Ambulance ambulance = selectAmbulance();
+        //addEmergency(emergency);
+        //startEmergencyRequest(ambulance, emergency);
+        //ambulance.rescue(emergency, hospital);
         addEmergency(emergency);
-        startEmergencyRequest(ambulance, emergency);
-        ambulance.rescue(emergency, hospital);
+        startEmergencyRequest(closestAmbulance, emergency);
+        closestAmbulance.rescue(emergency, hospital);
     }
 
     public Integer manhattanDistance(Point a, Point b) {
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+    }
+
+    public Integer minimumAmbulanceDistance() {
+        Integer minimumDistance = Integer.MAX_VALUE;
+
+        for(Ambulance a: ambulanceList.keySet()) {
+            // also need to check if the ambulance type is the same as the emergency type
+            if(a.available) {
+                Integer currentDistance = manhattanDistance(a.point, central.getCurrentEmergency().point);
+                if (currentDistance <= minimumDistance) {
+                    minimumDistance = currentDistance;
+                    closestAmbulance = a;
+                }
+            }
+        }
+        return minimumDistance;
+
     }
 
     @Override
@@ -203,6 +225,6 @@ public class Station extends Entity implements Comparable<Station>{
             return 0;
         }
 
-        return manhattanDistance(point, central.getCurrentEmergency().point).compareTo(s.manhattanDistance(s.point, central.getCurrentEmergency().point));
+        return minimumAmbulanceDistance().compareTo(s.minimumAmbulanceDistance());
     }
 }
