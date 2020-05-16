@@ -144,6 +144,16 @@ public class Board {
 				( j <= 5 && i >= 26) || ( j <= 7 && i >= 27) || ( j <= 8 && i >= 29));
 	}
 
+	public static int stepsPerCell(int i, int j) {
+		if (j <= 18) {
+			if (i >= 13 && i <= 23)
+				return 3;
+			if ((i >= 3 && i <= 12) || (i >= 23 && i <= 29))
+				return 2;
+		}
+		return 1;
+	}
+
 	/***********************************
 	 ***** C: ELICIT AGENT ACTIONS *****
 	 ***********************************/

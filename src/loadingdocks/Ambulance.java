@@ -12,12 +12,15 @@ public class Ambulance extends Entity {
     public Hospital hospital;
     public AmbulanceDirection direction;
 
+    public int stepsLeftToMove;
+
     public Ambulance (Point point, Color color, Station station) {
         super(point, color);
         this.available = true;
         this.patient = false;
         this.station = station;
         this.direction = AmbulanceDirection.SO;
+        stepsLeftToMove = Board.stepsPerCell(this.station.point.x, this.station.point.y);
     }
 
     public void rescue(Emergency emergency, Hospital hospital) {
@@ -27,6 +30,10 @@ public class Ambulance extends Entity {
     }
 
     public void decide() {
+        if (stepsLeftToMove > 1) {
+            stepsLeftToMove--;
+            return;
+        }
         if (!this.available && !this.patient && this.point.equals(this.emergency.point)) {
             System.out.println("Ambulance picked up patient");
             pickupPatient();
@@ -40,6 +47,7 @@ public class Ambulance extends Entity {
         }
         else if (!this.available || this.available && !this.point.equals((this.station.point))) {
             move();
+            stepsLeftToMove = Board.stepsPerCell(this.point.x, this.point.y);
         }
 
     }
