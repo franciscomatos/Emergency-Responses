@@ -4,7 +4,7 @@ import java.awt.Color;
 
 public class Block {
 
-	public enum Shape { shelf, ramp, free , station, hospital, emergency, ambulance}
+	public enum Shape { free , station, hospital, emergency, ambulance, ocean}
 	public Shape shape;
 	public Color color;
 	

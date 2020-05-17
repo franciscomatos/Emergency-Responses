@@ -1,61 +1,132 @@
 package loadingdocks;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 
 public class Station extends Entity implements Comparable<Station>{
 
     public enum Action { SelectAmbulance, SendAmbulance, RefuseRequest}
-    public enum AmbulanceType { blue, yellow, red}
-
-    public HashMap<Ambulance, AmbulanceType> ambulanceList = new HashMap<Ambulance, AmbulanceType>();
 
     public HashMap<Ambulance, Emergency> emergencyRequests = new HashMap<Ambulance, Emergency>();
 
-    public List<Emergency> emergencies = new ArrayList<>();
+    public List<Ambulance> ambulances = new ArrayList<>();
 
-    public int blueAmbulances;
-    public int redAmbulances;
-    public int yellowAmbulances;
+    public List<Emergency> emergencies = new ArrayList<>();
 
     public Central central;
 
     public Ambulance closestAmbulance;
 
-    public Station(Point point, Color color, int blueAmbulances, int redAmbulances, int yellowAmbulances){
+    public Station(Point point, Color color, int blueAmbulances, int yellowAmbulances, int redAmbulances){
 
         super(point, color);
-        this.blueAmbulances = blueAmbulances;
-        this.redAmbulances = redAmbulances;
-        this.yellowAmbulances = yellowAmbulances;
 
         for(int i = 0; i < blueAmbulances; i++){
-            ambulanceList.put(new Ambulance(new Point(point.x, point.y), Color.blue, this), AmbulanceType.blue);
+            this.ambulances.add(new Ambulance(new Point(point.x, point.y), Color.blue, Ambulance.AmbulanceType.blue, this));
         }
 
         for(int i = 0; i < redAmbulances; i++){
-            ambulanceList.put(new Ambulance(new Point(point.x, point.y), Color.red, this), AmbulanceType.red);
+            this.ambulances.add(new Ambulance(new Point(point.x, point.y), Color.red, Ambulance.AmbulanceType.red, this));
         }
 
         for(int i = 0; i < yellowAmbulances; i++){
-            ambulanceList.put(new Ambulance(new Point(point.x, point.y), Color.yellow, this), AmbulanceType.yellow);
+            this.ambulances.add(new Ambulance(new Point(point.x, point.y), Color.yellow, Ambulance.AmbulanceType.yellow, this));
         }
+    }
+
+    public void addBlueAmbulances(int ambulancesToAdd){
+        for(int i = 0; i < ambulancesToAdd; i++){
+            this.ambulances.add(new Ambulance(new Point(point.x, point.y), Color.blue, Ambulance.AmbulanceType.blue, this));
+        }
+    }
+
+    public void addRedAmbulances(int ambulancesToAdd){
+        for(int i = 0; i < ambulancesToAdd; i++){
+            this.ambulances.add(new Ambulance(new Point(point.x, point.y), Color.red, Ambulance.AmbulanceType.red, this));
+        }
+    }
+
+    public void addYellowAmbulances(int ambulancesToAdd){
+        for(int i = 0; i < ambulancesToAdd; i++){
+            this.ambulances.add(new Ambulance(new Point(point.x, point.y), Color.yellow, Ambulance.AmbulanceType.yellow, this));
+        }
+    }
+
+    public void removeBlueAmbulances(int ambulancesToRemove){
+        for(Ambulance ambulance : ambulances){
+            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.blue && ambulancesToRemove > 0){
+                ambulances.remove(ambulance);
+                ambulancesToRemove--;
+            }
+        }
+    }
+
+    public void removeRedAmbulances(int ambulancesToRemove){
+        for(Ambulance ambulance : ambulances){
+            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.red && ambulancesToRemove > 0){
+                ambulances.remove(ambulance);
+                ambulancesToRemove--;
+            }
+        }
+    }
+
+    public void removeYellowAmbulances(int ambulancesToRemove){
+        for(Ambulance ambulance : ambulances){
+            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.yellow && ambulancesToRemove > 0){
+                ambulances.remove(ambulance);
+                ambulancesToRemove--;
+            }
+        }
+    }
+
+    public int getMediumTimeToReachHospital(){
+        int timeToReachHospital = 0;
+        for(Ambulance ambulance : ambulances){
+            timeToReachHospital+= ambulance.getTimeToReachHospital();
+        }
+
+        return timeToReachHospital/ambulances.size();
     }
 
     public HashMap<Ambulance, Emergency> getEmergencyRequests() {
         return emergencyRequests;
     }
 
-    public HashMap<Ambulance, AmbulanceType> getAmbulanceList() {
-        return ambulanceList;
+    public List<Ambulance> getAmbulances() {
+        return ambulances;
     }
 
-    public List<Ambulance> getAmbulances() {
-        return new ArrayList<Ambulance>(ambulanceList.keySet());
+    public List<Ambulance> getBlueAmbulances() {
+        List<Ambulance> _ambulances = new ArrayList<>();
+        for (Ambulance ambulance: ambulances){
+            if (ambulance.ambulanceType == Ambulance.AmbulanceType.blue){
+                _ambulances.add(ambulance);
+            }
+        }
+        return _ambulances;
     }
+
+    public List<Ambulance> getYellowAmbulances() {
+        List<Ambulance> _ambulances = new ArrayList<>();
+        for (Ambulance ambulance: ambulances){
+            if (ambulance.ambulanceType == Ambulance.AmbulanceType.yellow){
+                _ambulances.add(ambulance);
+            }
+        }
+        return _ambulances;
+    }
+
+    public List<Ambulance> getRedAmbulances() {
+        List<Ambulance> _ambulances = new ArrayList<>();
+        for (Ambulance ambulance: ambulances){
+            if (ambulance.ambulanceType == Ambulance.AmbulanceType.red){
+                _ambulances.add(ambulance);
+            }
+        }
+        return _ambulances;
+    }
+
 
     public void startEmergencyRequest(Ambulance _ambulance, Emergency emergency){
         emergencyRequests.put(_ambulance, emergency);
@@ -70,6 +141,7 @@ public class Station extends Entity implements Comparable<Station>{
     }
 
     public void removeEmergency(Emergency emergency){
+        Board.removeEmergency(emergency);
         emergencies.remove(emergency);
     }
 
@@ -98,81 +170,17 @@ public class Station extends Entity implements Comparable<Station>{
     }
 
     public int availableAmbulances(){
-        return ambulanceList.size() - emergencyRequests.size();
+        return getAmbulances().size() - emergencyRequests.size();
     }
 
     public boolean hasEmergency(){
         return !emergencies.isEmpty();
     }
 
-    public int blueAmbulancesAvailable(){
-        int availableAmbulances = this.blueAmbulances;
-        for (Ambulance _ambulance : ambulanceList.keySet()){
-            if (ambulanceList.get(_ambulance) == AmbulanceType.blue && emergencyRequests.get(_ambulance) != null){
-                availableAmbulances--;
-            }
-        }
-        return availableAmbulances;
-    }
-
-    public int redAmbulancesAvailable(){
-        int availableAmbulances = this.redAmbulances;
-        for (Ambulance _ambulance : ambulanceList.keySet()){
-            if (ambulanceList.get(_ambulance) == AmbulanceType.red && emergencyRequests.get(_ambulance) != null){
-                availableAmbulances--;
-            }
-        }
-        return availableAmbulances;
-    }
-
-    public int yellowAmbulancesAvailable(){
-        int availableAmbulances = this.yellowAmbulances;
-        for (Ambulance _ambulance : ambulanceList.keySet()){
-            if (ambulanceList.get(_ambulance) == AmbulanceType.yellow && emergencyRequests.get(_ambulance) != null){
-                availableAmbulances--;
-            }
-        }
-        return availableAmbulances;
-    }
-
     /**
      *
      * Actuators
      */
-
-    public Ambulance selectAmbulance(){
-
-        if (blueAmbulancesAvailable() > 0){
-            for (Ambulance _ambulance : ambulanceList.keySet()){
-                if (ambulanceList.get(_ambulance) == AmbulanceType.blue && emergencyRequests.get(_ambulance) == null){
-                    return _ambulance;
-                }
-            }
-        }
-        else if (yellowAmbulancesAvailable() > 0){
-            for (Ambulance _ambulance : ambulanceList.keySet()){
-                if (ambulanceList.get(_ambulance) == AmbulanceType.yellow && emergencyRequests.get(_ambulance) == null){
-                    return _ambulance;
-                }
-            }
-        }
-        else if (redAmbulancesAvailable() > 0){
-            for (Ambulance _ambulance : ambulanceList.keySet()){
-                if (ambulanceList.get(_ambulance) == AmbulanceType.red && emergencyRequests.get(_ambulance) == null){
-                    return _ambulance;
-                }
-            }
-        }
-        throw new UnsupportedOperationException("Failed to Select an ambulance. There isn't a single ambulance available.");
-    }
-
-    public void sendAmbulance(Ambulance ambulance, Emergency emergency){
-        // sends an ambulance to an emergency point.
-        // Board.getEntity(emergency.point); what should be done with this ?
-        // startEmergencyRequest(ambulance, emergency);
-        // ambulance.GoToEmergency(emergency);
-
-    }
 
     public void refuseRequest(){
         // send boolean to central so that the central knows the request was refused.
@@ -189,10 +197,6 @@ public class Station extends Entity implements Comparable<Station>{
 
     // right now this method simply decreases a counter for testing purposes
     public void assistEmergency(Emergency emergency, Hospital hospital) {
-        //Ambulance ambulance = selectAmbulance();
-        //addEmergency(emergency);
-        //startEmergencyRequest(ambulance, emergency);
-        //ambulance.rescue(emergency, hospital);
         addEmergency(emergency);
         startEmergencyRequest(closestAmbulance, emergency);
         closestAmbulance.rescue(emergency, hospital);
@@ -202,21 +206,51 @@ public class Station extends Entity implements Comparable<Station>{
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
 
+    public List<Ambulance> getAmbulances(Emergency.EmergencyGravity gravity){
+        List<Ambulance> ambulances = new ArrayList<>();
+        switch (gravity){
+            case Low:
+                ambulances = getBlueAmbulances();
+                break;
+            case Medium:
+                ambulances = getYellowAmbulances();
+                break;
+            case High:
+                ambulances = getRedAmbulances();
+                break;
+        }
+
+        return ambulances;
+    }
+
     public Integer minimumAmbulanceDistance() {
         Integer minimumDistance = Integer.MAX_VALUE;
+        closestAmbulance = null;
 
-        for(Ambulance a: ambulanceList.keySet()) {
-            // also need to check if the ambulance type is the same as the emergency type
-            if(a.available) {
-                Integer currentDistance = manhattanDistance(a.point, central.getCurrentEmergency().point);
+        for(Ambulance ambulance: getAmbulances(central.getCurrentEmergency().gravity)) {
+            if(ambulance.available) {
+                Integer currentDistance = manhattanDistance(ambulance.point, central.getCurrentEmergency().point);
                 if (currentDistance <= minimumDistance) {
                     minimumDistance = currentDistance;
-                    closestAmbulance = a;
+                    closestAmbulance = ambulance;
+                }
+            }
+        }
+
+        if (minimumDistance == Integer.MAX_VALUE || closestAmbulance == null) {
+            getAmbulances().sort(new SortAmbulances());
+
+            for (Ambulance ambulance : getAmbulances()) {
+                if (ambulance.available) {
+                    Integer currentDistance = manhattanDistance(ambulance.point, central.getCurrentEmergency().point);
+                    if (currentDistance <= minimumDistance) {
+                        minimumDistance = currentDistance;
+                        closestAmbulance = ambulance;
+                    }
                 }
             }
         }
         return minimumDistance;
-
     }
 
     @Override
@@ -228,3 +262,4 @@ public class Station extends Entity implements Comparable<Station>{
         return minimumAmbulanceDistance().compareTo(s.minimumAmbulanceDistance());
     }
 }
+

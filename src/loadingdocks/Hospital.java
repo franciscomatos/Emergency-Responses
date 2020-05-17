@@ -4,30 +4,46 @@ import java.awt.*;
 
 public class Hospital extends Entity implements Comparable<Hospital>{
 
-    private Integer currentLotation;
-    private Integer maxLotation;
+    private Integer currentCapacity;
+    private Integer maxCapacity;
     public Central central;
 
-    public Hospital(Point point, Color color, int lotation) {
+    public Hospital(Point point, Color color, int maxCapacity) {
         super (point, color);
-        this.currentLotation = lotation;
-        this.maxLotation = lotation;
+        this.currentCapacity = 0;
+        this.maxCapacity = maxCapacity;
     }
 
     public void setCentral(Central central) {
         this.central = central;
     }
 
-    public Integer getLotation() { return this.currentLotation; }
+    public Integer getCurrentCapacity() { return this.currentCapacity; }
 
-    public void decreaseLotation() { this.currentLotation--;}
-
-    public void increaseLotation() {
-        if(this.currentLotation < this.maxLotation)
-            this.currentLotation++;
+    public void decreaseCurrentCapacity() {
+        if (this.currentCapacity > 0) {
+            this.currentCapacity--;
+        }
     }
 
-    public Boolean canReceivePatient() { return getLotation() > 0; }
+    public void increaseCurrentCapacity() {
+        if(this.currentCapacity < this.maxCapacity)
+            this.currentCapacity++;
+    }
+
+    public Integer getMaxCapacity() {
+        return maxCapacity;
+    }
+
+    public void setMaxCapacity(int maxCapacity){
+        maxCapacity = maxCapacity;
+    }
+
+    public void setCurrentCapacity(Integer currentCapacity) {
+        this.currentCapacity = currentCapacity;
+    }
+
+    public Boolean canReceivePatient() { return currentCapacity < maxCapacity; }
 
     public Integer manhattanDistance(Point a, Point b) {
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);

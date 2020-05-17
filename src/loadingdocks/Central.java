@@ -33,6 +33,10 @@ public class Central {
 
     public void removeEmergencyFromQueue() { this.emergencies.poll(); }
 
+    public int getEmergenciesInQueue(){
+        return emergencies.size();
+    }
+
     public void selectNearestStation() {
         if(getCurrentEmergency() == null) {
             System.out.println("no current emergencies to handle");
@@ -50,11 +54,11 @@ public class Central {
         for(int i = 0; i < hospitals.size(); i++) {
             Hospital currentNearestHospital = hospitals.get(i);
             System.out.println("nearest hospital is at: (" + currentNearestHospital.point.x + "," + currentNearestHospital.point.y + ")");
-            System.out.println("Lotation: " + currentNearestHospital.getLotation());
+            System.out.println("Capacity: " + currentNearestHospital.getCurrentCapacity());
             if(currentNearestHospital.canReceivePatient()) {
                 System.out.println("can receive patient");
                 decidedHospital = currentNearestHospital;
-                decidedHospital.decreaseLotation();
+                //decidedHospital.increaseCapacity();
                 break;
             }
         }

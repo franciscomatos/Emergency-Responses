@@ -4,6 +4,7 @@ import java.awt.*;
 
 public class Ambulance extends Entity {
     public enum AmbulanceDirection {N, S, E, O, NE, NO, SE, SO}
+    public enum AmbulanceType { blue, yellow, red}
 
     public boolean available;
     public boolean patient;
@@ -11,16 +12,21 @@ public class Ambulance extends Entity {
     public Emergency emergency;
     public Hospital hospital;
     public AmbulanceDirection direction;
+    public AmbulanceType ambulanceType;
+
+    public int timeToReachHospital;
 
     public int stepsLeftToMove;
 
-    public Ambulance (Point point, Color color, Station station) {
+    public Ambulance (Point point, Color color, AmbulanceType ambulanceType, Station station) {
         super(point, color);
         this.available = true;
         this.patient = false;
         this.station = station;
         this.direction = AmbulanceDirection.SO;
+        this.ambulanceType = ambulanceType;
         stepsLeftToMove = Board.stepsPerCell(this.station.point.x, this.station.point.y);
+        this.timeToReachHospital = 0;
     }
 
     public void rescue(Emergency emergency, Hospital hospital) {
@@ -30,6 +36,9 @@ public class Ambulance extends Entity {
     }
 
     public void decide() {
+        if ((this.emergency == null) || (this.station == null)|| (this.hospital == null)){
+            return;
+        }
         if (stepsLeftToMove > 1) {
             stepsLeftToMove--;
             return;
@@ -41,15 +50,15 @@ public class Ambulance extends Entity {
         else if (!this.available && this.patient && this.point.equals(this.hospital.point)) {
             System.out.println("Ambulance dropped patient");
             dropPatient();
-            Board.removeBlock(this.emergency.point);
             this.station.finishEmergencyRequest(this);
             this.station.removeEmergency(this.emergency);
+            this.timeToReachHospital = Board.getTime(); // maybe add steps too.
+            this.hospital.increaseCurrentCapacity();
         }
         else if (!this.available || this.available && !this.point.equals((this.station.point))) {
             move();
             stepsLeftToMove = Board.stepsPerCell(this.point.x, this.point.y);
         }
-
     }
 
     public void move() {
@@ -66,7 +75,7 @@ public class Ambulance extends Entity {
             System.out.println("Moving to hospital");
             nextPosition = nextPosition(this.hospital.point);
         }
-        Board.updateEntityPosition(this.point, nextPosition);
+        Board.updateEntityPosition(this.point, nextPosition, this.ambulanceType);
         this.point = nextPosition;
     }
 
@@ -88,6 +97,10 @@ public class Ambulance extends Entity {
         int dY = dest.y - this.point.y;
         int nextX = this.point.x + Integer.signum(dX);
         int nextY = this.point.y + Integer.signum(dY);
+//       while((Board.isOcean(nextX, nextY)) || !isFreeCell(nextX, nextY)){
+//            nextX = this.point.x + random.nextInt(2);
+//            nextY = this.point.y + random.nextInt(2);
+//        }
         if (nextX == -1) {
             nextX = 0;
         }
@@ -96,6 +109,22 @@ public class Ambulance extends Entity {
         }
         updateDirection(dX, dY, nextX, nextY);
         return new Point(nextX, nextY);
+    }
+
+    private boolean isFreeCell(int nextX, int nextY){
+        if (Board.getEntity(new Point(nextX, nextY), this.ambulanceType) == null){
+            return true;
+        }
+        else if ((this.hospital.point.x == nextX && this.hospital.point.y == nextY) ||
+                (this.emergency.point.x == nextX && this.emergency.point.y == nextY) ||
+                (this.station.point.x == nextX && this.station.point.y == nextY)
+        ){
+            return true;
+        }
+        else{
+            Entity entity = Board.getEntity(new Point(nextX, nextY));
+            return !((entity instanceof Station) || (entity instanceof Hospital));
+        }
     }
 
     public void updateDirection(int dX, int dY, int nextX, int nextY) {
@@ -158,5 +187,17 @@ public class Ambulance extends Entity {
 
     public Hospital getHospital() {
         return this.hospital;
+    }
+
+    public AmbulanceType getAmbulanceType() {
+        return ambulanceType;
+    }
+
+    public int getTimeToReachHospital() {
+        return timeToReachHospital;
+    }
+
+    public void setAmbulanceType(AmbulanceType ambulanceType) {
+        this.ambulanceType = ambulanceType;
     }
 }
