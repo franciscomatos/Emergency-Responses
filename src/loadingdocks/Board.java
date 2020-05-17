@@ -37,7 +37,7 @@ public class Board {
 	private static int emergenciesRandomness;
 	private static int hospitalsMaxCapacity;
 
-	private static int deaths = 0;
+	private static int lostEmergencies = 0;
 
 	private static int stepCounter = 1;
 	
@@ -54,7 +54,7 @@ public class Board {
 		stations = new ArrayList<>();
 		stations.add(new Station(new Point(1, 3), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(7, 4), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		stations.add(new Station(new Point(7, 15), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
+		/*stations.add(new Station(new Point(7, 15), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(19, 4), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(18, 8), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(22, 6), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
@@ -62,7 +62,7 @@ public class Board {
 		stations.add(new Station(new Point(20, 17), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(26, 17), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(28, 16), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-
+		*/
 		/**
 		 * Create Hospitals
 		 * */
@@ -75,6 +75,7 @@ public class Board {
 		hospitals.add(new Hospital(new Point(18, 13), Color.red, 1));
 		hospitals.add(new Hospital(new Point(16, 15), Color.red, 1));
 		hospitals.add(new Hospital(new Point(16, 20), Color.red, 1));
+
 
 		/**
 		 * Initialize Emergencies
@@ -144,8 +145,8 @@ public class Board {
 	 ***** B: BOARD METHODS *****
 	 ****************************/
 
-	public static int getDeaths() {
-		return Board.deaths;
+	public static int getLostEmergencies() {
+		return Board.lostEmergencies;
 	}
 
 	public static int getHospitalsMaxCapacity() {
@@ -271,6 +272,8 @@ public class Board {
 
 	public static void removeEmergency(Emergency emergency){
 		emergencies.remove(emergency);
+		removeBlock(emergency.point);
+		removeEntity(emergency.point);
 	}
 
 	public static Block getBlock(Point point) {
@@ -418,7 +421,7 @@ public class Board {
 
 		if ((central.getEmergenciesInQueue() != 0) && (central.getEmergenciesInQueue() % (emergenciesRandomness*10) == 0)){
 			central.removeEmergencyFromQueue();
-			deaths++;
+			lostEmergencies++;
 		}
 
 		if ((time % emergenciesRandomness == 0) || (stepCounter % emergenciesRandomness == 0)){
@@ -432,7 +435,7 @@ public class Board {
 			Emergency.EmergencyGravity gravity = Collections.unmodifiableList(Arrays.asList(Emergency.EmergencyGravity.values())).get(randomGravity);
 			Emergency emergency = new Emergency(new Point(x, y), Color.orange, gravity);
 			emergencies.add(emergency);
-			if (board[x][y].shape == Shape.free){
+			if (getEntity(new Point(x,y)) == null){
 				insertBlock(emergency.point, Shape.emergency, emergency.color);
 				insertEntity(emergency, emergency.point);
 

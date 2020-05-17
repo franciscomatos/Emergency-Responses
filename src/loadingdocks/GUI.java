@@ -25,7 +25,7 @@ public class GUI extends JFrame {
 	static JTextField speed, emergenciesRandomness, blueAmbulances, yellowAmbulances, redAmbulances, hospitalsMaxCapacity;
 	static JPanel boardPanel;
 	static JButton run, reset, step;
-	static JLabel emergenciesQueue, timeToReachHospital, deaths, hospitalsFull;
+	static JLabel emergenciesQueue, timeToReachHospital, lostEmergencies, hospitalsFull;
 	private int nX, nY;
 
 	public class Cell extends JPanel {
@@ -96,13 +96,13 @@ public class GUI extends JFrame {
 		add(emergenciesQueuePanel());
 		add(emergenciesRandomnessPanel());
 		add(hospitalsMaxCapacityPanel());
-		add(timeToReachHospital());
-		add(deaths());
+		add(timeToReachHospitalPanel());
+		add(lostEmergenciesPanel());
 
 		Board.initialize();
 		Board.associateGUI(this);
 
-		add(hospitalsFull());
+		add(hospitalsFullPanel());
 
 		boardPanel = new JPanel();
 		boardPanel.setSize(new Dimension(700,700));
@@ -157,7 +157,7 @@ public class GUI extends JFrame {
 		p.setBorder(BorderFactory.createLineBorder(Color.white));
 		p.entity = object;
 		emergenciesQueue.setText("Emergencies in wait: " + Board.getEmergenciesInQueue());
-		deaths.setText("Deaths: " + Board.getDeaths());
+		lostEmergencies.setText("Lost Emergencies: " + Board.getLostEmergencies());
 		hospitalsFull.setText("Hospitals Full: " + Board.getHospitalsFull() + "/" + Board.getHospitals().size());
 	}
 
@@ -394,7 +394,7 @@ public class GUI extends JFrame {
 		return emergenciesQueue;
 	}
 
-	private Component timeToReachHospital() {
+	private Component timeToReachHospitalPanel() {
 		timeToReachHospital = new JLabel("Average time to reach Hospital per station: 0");
 		timeToReachHospital.setSize(new Dimension(225,50));
 		timeToReachHospital.setLocation(new Point(600,0));
@@ -402,15 +402,15 @@ public class GUI extends JFrame {
 		return timeToReachHospital;
 	}
 
-	private Component deaths() {
-		deaths = new JLabel("Deaths: 0");
-		deaths.setSize(new Dimension(200,50));
-		deaths.setLocation(new Point(600,15));
+	private Component lostEmergenciesPanel() {
+		lostEmergencies = new JLabel("Emergencies Lost: 0");
+		lostEmergencies.setSize(new Dimension(200,50));
+		lostEmergencies.setLocation(new Point(600,15));
 
-		return deaths;
+		return lostEmergencies;
 	}
 
-	private Component hospitalsFull() {
+	private Component hospitalsFullPanel() {
 		hospitalsFull = new JLabel("Hospitals Full: " + Board.getHospitalsFull() + "/" + Board.getHospitals().size());
 		hospitalsFull.setSize(new Dimension(200,50));
 		hospitalsFull.setLocation(new Point(600,30));

@@ -97,10 +97,22 @@ public class Ambulance extends Entity {
         int dY = dest.y - this.point.y;
         int nextX = this.point.x + Integer.signum(dX);
         int nextY = this.point.y + Integer.signum(dY);
-//       while((Board.isOcean(nextX, nextY)) || !isFreeCell(nextX, nextY)){
-//            nextX = this.point.x + random.nextInt(2);
-//            nextY = this.point.y + random.nextInt(2);
-//        }
+        int previousNextX = nextX;
+        int previousNextY = nextY;
+       while((Board.isOcean(nextX, nextY)) || !isFreeCell(nextX, nextY)){
+           if (nextX == previousNextX){
+               nextX = this.point.x + random.nextInt(2 + 1) - 1;
+               nextY = previousNextY;
+           }
+           else if (nextY == previousNextY){
+               nextX = previousNextX;
+               nextY = this.point.y + random.nextInt(2 + 1) - 1;
+           }
+           else{
+               nextX = this.point.x + random.nextInt(2 + 1) - 1;
+               nextY = this.point.y + random.nextInt(2 + 1) - 1;
+           }
+        }
         if (nextX == -1) {
             nextX = 0;
         }
@@ -112,7 +124,8 @@ public class Ambulance extends Entity {
     }
 
     private boolean isFreeCell(int nextX, int nextY){
-        if (Board.getEntity(new Point(nextX, nextY), this.ambulanceType) == null){
+        Entity entity = Board.getEntity(new Point(nextX, nextY));
+        if (entity == null){
             return true;
         }
         else if ((this.hospital.point.x == nextX && this.hospital.point.y == nextY) ||
@@ -122,8 +135,7 @@ public class Ambulance extends Entity {
             return true;
         }
         else{
-            Entity entity = Board.getEntity(new Point(nextX, nextY));
-            return !((entity instanceof Station) || (entity instanceof Hospital));
+            return false;
         }
     }
 
