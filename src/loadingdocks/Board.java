@@ -434,11 +434,12 @@ public class Board {
 				x = rand.nextInt(nX);
 				y = rand.nextInt(nY);
 			}
-			int randomGravity = rand.nextInt(Emergency.EmergencyGravity.values().length);
-			Emergency.EmergencyGravity gravity = Collections.unmodifiableList(Arrays.asList(Emergency.EmergencyGravity.values())).get(randomGravity);
-			Emergency emergency = new Emergency(new Point(x, y), Color.orange, gravity);
-			emergencies.add(emergency);
 			if (getEntity(new Point(x,y)) == null){
+				int randomGravity = rand.nextInt(Emergency.EmergencyGravity.values().length);
+				Emergency.EmergencyGravity gravity = Collections.unmodifiableList(Arrays.asList(Emergency.EmergencyGravity.values())).get(randomGravity);
+				Emergency emergency = new Emergency(new Point(x, y), Color.orange, gravity);
+				emergencies.add(emergency);
+
 				insertBlock(emergency.point, Shape.emergency, emergency.color);
 				insertEntity(emergency, emergency.point);
 
@@ -448,13 +449,13 @@ public class Board {
 			}
 		}
 		central.selectNearestStation();
+		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
+		for(Station station : stations) GUI.displayObject(station);
+		for(Hospital hospital : hospitals) GUI.displayObject(hospital);
 		for (Ambulance ambulance : ambulances) {
 			updateEntityPosition(ambulance.point, ambulance.point, ambulance.ambulanceType);
 			GUI.displayObject(ambulance);
 		}
-		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
-		for(Station station : stations) GUI.displayObject(station);
-		for(Hospital hospital : hospitals) GUI.displayObject(hospital);
 	}
 	
 	public static void removeObjects(){

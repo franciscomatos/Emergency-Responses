@@ -76,8 +76,6 @@ public class GUI extends JFrame {
 						g.setColor(Color.RED);
 						g.drawString("H", 4, 12);
 					}
-//	            	g.setColor(Color.ORANGE);
-//	            	g.fillOval(1, 1, 200, 200); ???????????
 				}
 			}
         }
@@ -148,14 +146,14 @@ public class GUI extends JFrame {
 	public void displayObject(Entity object) {
 		int row=nY-object.point.y-1, col=object.point.x;
 		Cell p = (Cell)boardPanel.getComponent(row*nX+col);
+		p.setBorder(BorderFactory.createLineBorder(Color.white));
+		p.entity = object;
 		if (object instanceof Emergency){
 			p.setBackground(object.color);
 		}
 		else if (object instanceof Station){
 			timeToReachHospital.setText("Average time to reach Hospital: " + Board.getMediumTimeToReachHospital());
 		}
-		p.setBorder(BorderFactory.createLineBorder(Color.white));
-		p.entity = object;
 		emergenciesQueue.setText("Emergencies in wait: " + Board.getEmergenciesInQueue());
 		lostEmergencies.setText("Lost Emergencies: " + Board.getLostEmergencies());
 		hospitalsFull.setText("Hospitals Full: " + Board.getHospitalsFull() + "/" + Board.getHospitals().size());

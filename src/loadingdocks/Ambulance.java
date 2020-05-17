@@ -2,6 +2,7 @@ package loadingdocks;
 
 import java.awt.*;
 import java.util.Comparator;
+import java.util.Random;
 
 public class Ambulance extends Entity implements Comparable<Ambulance>{
 
@@ -19,6 +20,8 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
     public int timeToReachHospital;
 
     public int stepsLeftToMove;
+
+    private static Random rand = new Random();
 
     public Ambulance (Point point, Color color, AmbulanceType ambulanceType, Station station)
     {
@@ -100,21 +103,17 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
         int dY = dest.y - this.point.y;
         int nextX = this.point.x + Integer.signum(dX);
         int nextY = this.point.y + Integer.signum(dY);
-        int previousNextX = nextX;
-        int previousNextY = nextY;
-       while((Board.isOcean(nextX, nextY)) || !isFreeCell(nextX, nextY)){
-           if (nextX == previousNextX){
-               nextX = this.point.x + random.nextInt(2 + 1) - 1;
-               nextY = previousNextY;
-           }
-           else if (nextY == previousNextY){
-               nextX = previousNextX;
-               nextY = this.point.y + random.nextInt(2 + 1) - 1;
-           }
-           else{
-               nextX = this.point.x + random.nextInt(2 + 1) - 1;
-               nextY = this.point.y + random.nextInt(2 + 1) - 1;
-           }
+
+        while((Board.isOcean(nextX, nextY)) || !isFreeCell(nextX, nextY)){
+            nextX = this.point.x + rand.nextInt(2 + 1) - 1;
+            nextY = this.point.y + rand.nextInt(2 + 1) - 1;
+
+            if ((nextX > (this.point.x + 1)) || (nextX < (this.point.x - 1))){
+                nextX = this.point.x;
+            }
+            if ((nextY > (this.point.y + 1)) || (nextY < (this.point.y - 1))){
+                nextY = this.point.y;
+            }
         }
         if (nextX == -1) {
             nextX = 0;
@@ -127,8 +126,11 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
     }
 
     private boolean isFreeCell(int nextX, int nextY){
+        if (this.point.x == nextX && this.point.y == nextY){
+            return false;
+        }
         Entity entity = Board.getEntity(new Point(nextX, nextY));
-        if (entity == null){
+        if (entity == null){ // || entity instanceof Emergency
             return true;
         }
         else if ((this.hospital.point.x == nextX && this.hospital.point.y == nextY) ||
