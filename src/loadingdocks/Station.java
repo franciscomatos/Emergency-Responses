@@ -238,7 +238,7 @@ public class Station extends Entity implements Comparable<Station>{
         }
 
         if (minimumDistance == Integer.MAX_VALUE || closestAmbulance == null) {
-            getAmbulances().sort(new SortAmbulances());
+            Collections.sort(getAmbulances());
 
             for (Ambulance ambulance : getAmbulances()) {
                 if (ambulance.available) {

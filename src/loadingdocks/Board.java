@@ -420,8 +420,11 @@ public class Board {
 		}
 
 		if ((central.getEmergenciesInQueue() != 0) && (central.getEmergenciesInQueue() % (emergenciesRandomness*10) == 0)){
-			central.removeEmergencyFromQueue();
-			lostEmergencies++;
+			Emergency e = central.removeEmergencyFromQueue();
+			if (e != null){
+				removeEmergency(e);
+				lostEmergencies++;
+			}
 		}
 
 		if ((time % emergenciesRandomness == 0) || (stepCounter % emergenciesRandomness == 0)){

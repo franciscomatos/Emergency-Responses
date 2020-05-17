@@ -31,7 +31,7 @@ public class Central {
 
     public Emergency getCurrentEmergency() { return this.emergencies.peek(); }
 
-    public void removeEmergencyFromQueue() { this.emergencies.poll(); }
+    public Emergency removeEmergencyFromQueue() { return this.emergencies.poll(); }
 
     public int getEmergenciesInQueue(){
         return emergencies.size();
@@ -74,7 +74,7 @@ public class Central {
             Station currentNearestStation = stations.get(i);
             System.out.println("nearest station is at: (" + currentNearestStation.point.x + "," + currentNearestStation.point.y + ")");
             System.out.println("available ambulances: " + currentNearestStation.availableAmbulances());
-            if(currentNearestStation.canReceiveEmergency()) {
+            if(currentNearestStation.canReceiveEmergency() && currentNearestStation.closestAmbulance != null) {
                 System.out.println("can receive emergency");
                 System.out.println("closest ambulance: (" + currentNearestStation.closestAmbulance.point.x + "," + currentNearestStation.closestAmbulance.point.y + ")");
                 currentNearestStation.assistEmergency(getCurrentEmergency(), decidedHospital);

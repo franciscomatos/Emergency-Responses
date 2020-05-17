@@ -1,8 +1,10 @@
 package loadingdocks;
 
 import java.awt.*;
+import java.util.Comparator;
 
-public class Ambulance extends Entity {
+public class Ambulance extends Entity implements Comparable<Ambulance>{
+
     public enum AmbulanceDirection {N, S, E, O, NE, NO, SE, SO}
     public enum AmbulanceType { blue, yellow, red}
 
@@ -18,7 +20,8 @@ public class Ambulance extends Entity {
 
     public int stepsLeftToMove;
 
-    public Ambulance (Point point, Color color, AmbulanceType ambulanceType, Station station) {
+    public Ambulance (Point point, Color color, AmbulanceType ambulanceType, Station station)
+    {
         super(point, color);
         this.available = true;
         this.patient = false;
@@ -46,12 +49,12 @@ public class Ambulance extends Entity {
         if (!this.available && !this.patient && this.point.equals(this.emergency.point)) {
             System.out.println("Ambulance picked up patient");
             pickupPatient();
+            this.station.finishEmergencyRequest(this);
+            this.station.removeEmergency(this.emergency);
         }
         else if (!this.available && this.patient && this.point.equals(this.hospital.point)) {
             System.out.println("Ambulance dropped patient");
             dropPatient();
-            this.station.finishEmergencyRequest(this);
-            this.station.removeEmergency(this.emergency);
             this.timeToReachHospital = Board.getTime(); // maybe add steps too.
             this.hospital.increaseCurrentCapacity();
         }
@@ -211,5 +214,10 @@ public class Ambulance extends Entity {
 
     public void setAmbulanceType(AmbulanceType ambulanceType) {
         this.ambulanceType = ambulanceType;
+    }
+
+    @Override
+    public int compareTo(Ambulance a) {
+        return this.ambulanceType.compareTo(a.ambulanceType) +  (this.getTimeToReachHospital() - a.getTimeToReachHospital());
     }
 }
