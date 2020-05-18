@@ -51,6 +51,8 @@ public class Board {
 	private static int stepCounter = 1;
 
 	private static FileWriter csvWriter;
+	private static String LOGSDIRECTORY = "/home/spike/meic/AasmaProject/logs";
+	private static String LOGSFILE = "/home/spike/meic/AasmaProject/logs/logs.csv";
 	
 	
 	/****************************
@@ -65,7 +67,7 @@ public class Board {
 		stations = new ArrayList<>();
 		stations.add(new Station(new Point(1, 3), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(7, 4), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		/*stations.add(new Station(new Point(7, 15), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
+		stations.add(new Station(new Point(7, 15), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(19, 4), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(18, 8), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(22, 6), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
@@ -73,7 +75,6 @@ public class Board {
 		stations.add(new Station(new Point(20, 17), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(26, 17), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
 		stations.add(new Station(new Point(28, 16), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		*/
 		/**
 		 * Create Hospitals
 		 * */
@@ -153,12 +154,12 @@ public class Board {
 
 		try {
 
-			File directory = new File("/Users/franciscomatos/Desktop/logs/");
+			File directory = new File(LOGSDIRECTORY);
 			if (! directory.exists()){
 				directory.mkdir();
 			}
 
-			csvWriter = new FileWriter("/Users/franciscomatos/Desktop/logs/new.csv", true);
+			csvWriter = new FileWriter(LOGSFILE, true);
 			csvWriter.append("Emergency Randomness Factor");
 			csvWriter.append(",");
 			csvWriter.append("Emergency Loss Factor");
@@ -208,7 +209,7 @@ public class Board {
 	}
 
 	public static void setHospitalsCapacityRandomness(int randomness) {
-		hospitalsCapacityRandomness = randomness;
+		for (Hospital h: hospitals) h.setReleaseFactor(randomness);
 	}
 
 	public static void setLostEmergenciesRandomness(int randomness) {
@@ -464,6 +465,7 @@ public class Board {
 		if(stepCounter % 10 == 0)
 			logData();
 
+
 		stepCounter++;
 
 
@@ -472,8 +474,8 @@ public class Board {
 	public static void logData() {
 
 		List<List<String>> dataLines = new ArrayList<>();
-		dataLines.add(Arrays.asList(String.valueOf(emergenciesRandomness), String.valueOf(emergenciesRandomness),
-				String.valueOf(emergenciesRandomness), String.valueOf(getHospitalsFull()),
+		dataLines.add(Arrays.asList(String.valueOf(emergenciesRandomness), String.valueOf(lostEmergenciesRandomness),
+				String.valueOf(hospitalsCapacityRandomness), String.valueOf(getHospitalsFull()),
 				String.valueOf(blueAmbulances), String.valueOf(yellowAmbulances),
 				String.valueOf(redAmbulances), String.valueOf(getEmergenciesInQueue()), String.valueOf(getLostEmergencies())));
 
@@ -532,13 +534,13 @@ public class Board {
 			}
 		}
 		central.selectNearestStation();
-		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
-		for(Station station : stations) GUI.displayObject(station);
-		for(Hospital hospital : hospitals) GUI.displayObject(hospital);
 		for (Ambulance ambulance : ambulances) {
 			updateEntityPosition(ambulance.point, ambulance.point, ambulance.ambulanceType);
 			GUI.displayObject(ambulance);
 		}
+		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
+		for(Station station : stations) GUI.displayObject(station);
+		for(Hospital hospital : hospitals) GUI.displayObject(hospital);
 	}
 	
 	public static void removeObjects(){

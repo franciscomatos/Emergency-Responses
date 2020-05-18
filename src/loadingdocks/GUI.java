@@ -89,7 +89,7 @@ public class GUI extends JFrame {
 		setTitle("Emergency Responses");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
-		setSize(1000, 900);
+		setSize(1200, 800);
 		add(createTopPanel());
 		add(blueAmbulancesPanel());
 		add(yellowAmbulancesPanel());
@@ -151,14 +151,14 @@ public class GUI extends JFrame {
 	public void displayObject(Entity object) {
 		int row=nY-object.point.y-1, col=object.point.x;
 		Cell p = (Cell)boardPanel.getComponent(row*nX+col);
-		p.setBorder(BorderFactory.createLineBorder(Color.white));
-		p.entity = object;
 		if (object instanceof Emergency){
 			p.setBackground(object.color);
 		}
 		else if (object instanceof Station){
 			emergenciesCompleted.setText("Emergencies completed: " + Board.getEmergenciesCompleted());
 		}
+		p.setBorder(BorderFactory.createLineBorder(Color.white));
+		p.entity = object;
 		emergenciesQueue.setText("Emergencies in wait: " + Board.getEmergenciesInQueue());
 		lostEmergencies.setText("Lost Emergencies: " + Board.getLostEmergencies());
 		hospitalsFull.setText("Hospitals Full: " + Board.getHospitalsFull() + "/" + Board.getHospitals().size());
@@ -340,7 +340,7 @@ public class GUI extends JFrame {
 
 	private Component blueAmbulancesPanel() {
 		JPanel panel = new JPanel();
-		panel.setSize(new Dimension(200,50));
+		panel.setSize(new Dimension(280,50));
 		panel.setLocation(new Point(725,300));
 
 		JLabel label = new JLabel("Blue Ambulances");
@@ -370,7 +370,7 @@ public class GUI extends JFrame {
 
 	private Component yellowAmbulancesPanel() {
 		JPanel panel = new JPanel();
-		panel.setSize(new Dimension(200,50));
+		panel.setSize(new Dimension(280,50));
 		panel.setLocation(new Point(725,350));
 
 		JLabel label = new JLabel("Yellow Ambulances");
@@ -400,10 +400,10 @@ public class GUI extends JFrame {
 
 	private Component redAmbulancesPanel() {
 		JPanel panel = new JPanel();
-		panel.setSize(new Dimension(200,50));
+		panel.setSize(new Dimension(280,50));
 		panel.setLocation(new Point(725,400));
 
-		JLabel label = new JLabel("Red Ambulances ");
+		JLabel label = new JLabel("Red Ambulances");
 		panel.add(label);
 		redAmbulances = new JTextField("0");
 		redAmbulances.setMargin(new Insets(5,5,5,5));

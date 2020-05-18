@@ -41,6 +41,10 @@ public class Hospital extends Entity implements Comparable<Hospital>{
         this.maxCapacity = maxCapacity;
     }
 
+    public void setReleaseFactor(int releaseFactor){
+        this.releaseFactor = releaseFactor;
+    }
+
     public void updatePatients() {
         // decreases time for every patient, removes the ones that got to 0 and updates current capacity
         for(Patient patient: this.patients) {
