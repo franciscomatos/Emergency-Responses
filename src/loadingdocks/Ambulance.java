@@ -10,7 +10,7 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
     public enum AmbulanceType { blue, yellow, red}
 
     public boolean available;
-    public boolean patient;
+    public boolean hasPatient;
     public Station station;
     public Emergency emergency;
     public Hospital hospital;
@@ -21,13 +21,15 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
 
     public int stepsLeftToMove;
 
+    private Patient currentPatient = null;
+
     private static Random rand = new Random();
 
     public Ambulance (Point point, Color color, AmbulanceType ambulanceType, Station station)
     {
         super(point, color);
         this.available = true;
-        this.patient = false;
+        this.hasPatient = false;
         this.station = station;
         this.direction = AmbulanceDirection.SO;
         this.ambulanceType = ambulanceType;
@@ -35,9 +37,10 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
         this.timeToReachHospital = 0;
     }
 
-    public void rescue(Emergency emergency, Hospital hospital) {
+    public void rescue(Emergency emergency, Hospital hospital, Patient patient) {
         setEmergency(emergency);
         setHospital(hospital);
+        setCurrentPatient(patient);
         setAvailable(false);
     }
 
@@ -49,17 +52,17 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
             stepsLeftToMove--;
             return;
         }
-        if (!this.available && !this.patient && this.point.equals(this.emergency.point)) {
+        if (!this.available && !this.hasPatient && this.point.equals(this.emergency.point)) {
             System.out.println("Ambulance picked up patient");
             pickupPatient();
             this.station.finishEmergencyRequest(this);
             this.station.removeEmergency(this.emergency);
         }
-        else if (!this.available && this.patient && this.point.equals(this.hospital.point)) {
+        else if (!this.available && this.hasPatient && this.point.equals(this.hospital.point)) {
             System.out.println("Ambulance dropped patient");
             dropPatient();
             this.timeToReachHospital = Board.getTime(); // maybe add steps too.
-            this.hospital.increaseCurrentCapacity();
+            //this.hospital.increaseCurrentCapacity();
         }
         else if (!this.available || this.available && !this.point.equals((this.station.point))) {
             move();
@@ -73,11 +76,11 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
             System.out.println("Moving to station");
             nextPosition = nextPosition(this.station.point);
         }
-        else if (!isAvailable() && !this.patient) {
+        else if (!isAvailable() && !this.hasPatient) {
             System.out.println("Moving to patient");
             nextPosition = nextPosition(this.emergency.point);
         }
-        else if (!isAvailable() && this.patient) {
+        else if (!isAvailable() && this.hasPatient) {
             System.out.println("Moving to hospital");
             nextPosition = nextPosition(this.hospital.point);
         }
@@ -92,6 +95,7 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
     public void dropPatient() {
         setPatient(false);
         setAvailable(true);
+        this.currentPatient.setInHospital(true);
     }
 
     /*****************************
@@ -179,8 +183,10 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
     }
 
     public void setPatient(boolean patient) {
-        this.patient = patient;
+        this.hasPatient = patient;
     }
+
+    public void setCurrentPatient(Patient patient) { this.currentPatient = patient; }
 
     public void setEmergency(Emergency emergency) {
         this.emergency = emergency;
@@ -195,7 +201,7 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
     }
 
     public boolean isPatient() {
-        return this.patient;
+        return this.hasPatient;
     }
 
     public Emergency getEmergency() {

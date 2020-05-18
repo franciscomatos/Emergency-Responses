@@ -334,7 +334,7 @@ public class Board {
 	public static int getHospitalsFull(){
 		int hospitalsFull = 0;
 		for(Hospital hospital : hospitals){
-			if (hospital.getCurrentCapacity() == Board.hospitalsMaxCapacity){
+			if (hospital.getCurrentLotation() == Board.hospitalsMaxCapacity){
 				hospitalsFull++;
 			}
 		}
@@ -414,10 +414,11 @@ public class Board {
 	public static void displayObjects(){
 
 		// TODO: Change this!
-		if ((time % emergenciesRandomness == 0) || (stepCounter % emergenciesRandomness == 0)){
-			int random = rand.nextInt(hospitals.size());
-			hospitals.get(random).decreaseCurrentCapacity();
-		}
+//		if ((time % emergenciesRandomness == 0) || (stepCounter % emergenciesRandomness == 0)){
+//			int random = rand.nextInt(hospitals.size());
+//			hospitals.get(random).decreaseCurrentCapacity();
+//		}
+		for(Hospital hospital: getHospitals()) hospital.updatePatients();
 
 		if ((central.getEmergenciesInQueue() != 0) && (central.getEmergenciesInQueue() % (emergenciesRandomness*10) == 0)){
 			Emergency e = central.removeEmergencyFromQueue();
