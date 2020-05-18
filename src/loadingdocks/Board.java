@@ -43,6 +43,9 @@ public class Board {
 	private static int emergenciesRandomness;
 	private static int hospitalsMaxCapacity;
 
+	private static int hospitalsCapacityRandomness = 10;
+	private static int lostEmergenciesRandomness = 10;
+
 	private static int lostEmergencies = 0;
 
 	private static int stepCounter = 1;
@@ -202,6 +205,14 @@ public class Board {
 				hospital.setMaxCapacity(hospitalsMaxCapacity);
 			}
 		}
+	}
+
+	public static void setHospitalsCapacityRandomness(int randomness) {
+		hospitalsCapacityRandomness = randomness;
+	}
+
+	public static void setLostEmergenciesRandomness(int randomness) {
+		lostEmergenciesRandomness = randomness;
 	}
 
 	public static int getEmergenciesRandomness() {
@@ -384,13 +395,13 @@ public class Board {
 		return hospitalsFull;
 	}
 
-	public static int getMediumTimeToReachHospital(){
-		int timeToReachHospital = 0;
-		for(Ambulance ambulance : ambulances){
-			timeToReachHospital+= ambulance.getTimeToReachHospital();
+	public static int getEmergenciesCompleted(){
+		int emergenciesCompleted = 0;
+		for(Station s : stations){
+			emergenciesCompleted += s.getEmergenciesCompleted();
 		}
 
-		return timeToReachHospital/ambulances.size();
+		return emergenciesCompleted;
 	}
 
 	/***********************************
@@ -487,14 +498,10 @@ public class Board {
 
 	public static void displayObjects(){
 
-		// TODO: Change this!
-//		if ((time % emergenciesRandomness == 0) || (stepCounter % emergenciesRandomness == 0)){
-//			int random = rand.nextInt(hospitals.size());
-//			hospitals.get(random).decreaseCurrentCapacity();
-//		}
 		for(Hospital hospital: getHospitals()) hospital.updatePatients();
 
-		if ((central.getEmergenciesInQueue() != 0) && (central.getEmergenciesInQueue() % (emergenciesRandomness*10) == 0)){
+		// emergency was lost
+		if ((central.getEmergenciesInQueue() != 0) && (central.getEmergenciesInQueue() % (lostEmergenciesRandomness) == 0)){
 			Emergency e = central.removeEmergencyFromQueue();
 			if (e != null){
 				removeEmergency(e);
@@ -502,6 +509,7 @@ public class Board {
 			}
 		}
 
+		// creating new emergency
 		if ((time % emergenciesRandomness == 0) || (stepCounter % emergenciesRandomness == 0)){
 			int x = -1;
 			int y = -1;
