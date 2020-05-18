@@ -53,7 +53,7 @@ public class Central {
         for(int i = 0; i < hospitals.size(); i++) {
             Hospital currentNearestHospital = hospitals.get(i);
             System.out.println("nearest hospital is at: (" + currentNearestHospital.point.x + "," + currentNearestHospital.point.y + ")");
-            System.out.println("Capacity: " + currentNearestHospital.getCurrentLotation());
+            System.out.println("Lotation: " + currentNearestHospital.getCurrentLotation());
             if(currentNearestHospital.canReceivePatient()) {
                 System.out.println("can receive patient");
                 decidedHospital = currentNearestHospital;
