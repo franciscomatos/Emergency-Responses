@@ -243,8 +243,6 @@ public class Station extends Entity implements Comparable<Station>{
         }
 
         if (minimumDistance == Integer.MAX_VALUE || closestAmbulance == null) {
-            Collections.sort(getAmbulances());
-
             for (Ambulance ambulance : getAmbulances()) {
                 if (ambulance.available) {
                     Integer currentDistance = manhattanDistance(ambulance.point, central.getCurrentEmergency().point);
@@ -269,6 +267,10 @@ public class Station extends Entity implements Comparable<Station>{
 
     public int getEmergenciesCompleted() {
         return emergenciesCompleted;
+    }
+
+    public void setEmergenciesCompleted(int emergenciesCompleted) {
+        this.emergenciesCompleted = emergenciesCompleted;
     }
 }
 

@@ -52,7 +52,6 @@ public class Board {
 
 	private static FileWriter csvWriter;
 	private static String LOGSDIRECTORY = "/home/spike/meic/AasmaProject/logs";
-	private static String LOGSFILE = "/home/spike/meic/AasmaProject/logs/logs.csv";
 	
 	
 	/****************************
@@ -152,39 +151,10 @@ public class Board {
 			}
 		}
 
-		try {
-
 			File directory = new File(LOGSDIRECTORY);
 			if (! directory.exists()){
 				directory.mkdir();
 			}
-
-			csvWriter = new FileWriter(LOGSFILE, true);
-			csvWriter.append("Emergency Randomness Factor");
-			csvWriter.append(",");
-			csvWriter.append("Emergency Loss Factor");
-			csvWriter.append(",");
-			csvWriter.append("Release Factor");
-			csvWriter.append(",");
-			csvWriter.append("Hospitals Max Capacity");
-			csvWriter.append(",");
-			csvWriter.append("Blue Ambulances");
-			csvWriter.append(",");
-			csvWriter.append("Yellow Ambulances");
-			csvWriter.append(",");
-			csvWriter.append("Red Ambulances");
-			csvWriter.append(",");
-			csvWriter.append("Emergencies in queue");
-			csvWriter.append(",");
-			csvWriter.append("Lost in queue");
-			csvWriter.append("\n");
-
-			System.out.println("apppend");
-			csvWriter.flush();
-
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/****************************
@@ -447,6 +417,8 @@ public class Board {
 
 	public static void reset() {
 		stepCounter = 1;
+		lostEmergencies = 0;
+		for (Station s: stations) s.setEmergenciesCompleted(0);
 		removeObjects();
 		initialize();
 		GUI.displayBoard();
@@ -472,12 +444,35 @@ public class Board {
 	}
 
 	public static void logData() {
+		try {
+			String filename = String.valueOf(emergenciesRandomness)
+					+ "_" + String.valueOf(hospitalsMaxCapacity)
+					+ "_" + String.valueOf(hospitalsCapacityRandomness)
+					+ "_" + String.valueOf(lostEmergenciesRandomness)
+					+ "_" + String.valueOf(blueAmbulances)
+					+ "_" + String.valueOf(yellowAmbulances)
+					+ "_" + String.valueOf(redAmbulances)
+					+ ".csv";
+			csvWriter = new FileWriter(LOGSDIRECTORY + "/" + filename, true);
+			csvWriter.append("Number of Full Hospitals");
+			csvWriter.append(",");
+			csvWriter.append("Emergencies in queue");
+			csvWriter.append(",");
+			csvWriter.append("Completed emergencies");
+			csvWriter.append(",");
+			csvWriter.append("Lost in queue");
+			csvWriter.append("\n");
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
 
 		List<List<String>> dataLines = new ArrayList<>();
-		dataLines.add(Arrays.asList(String.valueOf(emergenciesRandomness), String.valueOf(lostEmergenciesRandomness),
-				String.valueOf(hospitalsCapacityRandomness), String.valueOf(getHospitalsFull()),
-				String.valueOf(blueAmbulances), String.valueOf(yellowAmbulances),
-				String.valueOf(redAmbulances), String.valueOf(getEmergenciesInQueue()), String.valueOf(getLostEmergencies())));
+		dataLines.add(Arrays.asList(
+				String.valueOf(getHospitalsFull()),
+				String.valueOf(getEmergenciesInQueue()),
+				String.valueOf(getEmergenciesCompleted()),
+				String.valueOf(getLostEmergencies())));
 
 
 		try {

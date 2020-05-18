@@ -7,7 +7,17 @@ import java.util.Random;
 public class Ambulance extends Entity implements Comparable<Ambulance>{
 
     public enum AmbulanceDirection {N, S, E, O, NE, NO, SE, SO}
-    public enum AmbulanceType { blue, yellow, red}
+    public enum AmbulanceType {
+        blue(1),
+        yellow(2),
+        red(3);
+
+        public final int label;
+
+        private AmbulanceType(int label) {
+            this.label = label;
+        }
+    }
 
     public boolean available;
     public boolean hasPatient;
@@ -61,7 +71,7 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
         else if (!this.available && this.hasPatient && this.point.equals(this.hospital.point)) {
             System.out.println("Ambulance dropped patient");
             dropPatient();
-            this.timeToReachHospital = Board.getTime(); // maybe add steps too.
+//            this.timeToReachHospital = Board.getTime(); // maybe add steps too.
             //this.hospital.increaseCurrentCapacity();
         }
         else if (!this.available || this.available && !this.point.equals((this.station.point))) {
@@ -226,6 +236,6 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
 
     @Override
     public int compareTo(Ambulance a) {
-        return this.ambulanceType.compareTo(a.ambulanceType) +  (this.getTimeToReachHospital() - a.getTimeToReachHospital());
+        return Integer.compare(this.ambulanceType.label, a.ambulanceType.label);
     }
 }
