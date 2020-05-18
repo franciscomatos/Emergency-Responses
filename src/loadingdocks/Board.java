@@ -51,7 +51,7 @@ public class Board {
 	private static int stepCounter = 1;
 
 	private static FileWriter csvWriter;
-	private static String LOGSDIRECTORY = "/home/spike/meic/AasmaProject/logs";
+	private static String LOGSDIRECTORY = System.getProperty("user.dir");
 	
 	
 	/****************************
@@ -280,8 +280,12 @@ public class Board {
 	}
 	
 	public static Entity getEntity(Point point) {
-		return objects[point.x][point.y];
+        return objects[point.x][point.y];
 	}
+
+	public static boolean isOutOfBoard(Point point){
+        return (point.x >= nX || point.y >= nY);
+    }
 
 	public static Entity getEntity(Point point, Ambulance.AmbulanceType ambulanceType) {
 		if (ambulanceType == Ambulance.AmbulanceType.blue){

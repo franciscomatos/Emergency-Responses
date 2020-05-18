@@ -143,6 +143,9 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
         if (this.point.x == nextX && this.point.y == nextY){
             return false;
         }
+        if (Board.isOutOfBoard(new Point(nextX, nextY))){
+            return false;
+        }
         Entity entity = Board.getEntity(new Point(nextX, nextY));
         if (entity == null){ // || entity instanceof Emergency
             return true;
