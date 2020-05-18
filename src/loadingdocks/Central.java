@@ -1,6 +1,5 @@
 package loadingdocks;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class Central {
         for(int i = 0; i < hospitals.size(); i++) {
             Hospital currentNearestHospital = hospitals.get(i);
             System.out.println("nearest hospital is at: (" + currentNearestHospital.point.x + "," + currentNearestHospital.point.y + ")");
-            System.out.println("Capacity: " + currentNearestHospital.getCurrentCapacity());
+            System.out.println("Lotation: " + currentNearestHospital.getCurrentLotation());
             if(currentNearestHospital.canReceivePatient()) {
                 System.out.println("can receive patient");
                 decidedHospital = currentNearestHospital;
@@ -77,7 +76,12 @@ public class Central {
             if(currentNearestStation.canReceiveEmergency() && currentNearestStation.closestAmbulance != null) {
                 System.out.println("can receive emergency");
                 System.out.println("closest ambulance: (" + currentNearestStation.closestAmbulance.point.x + "," + currentNearestStation.closestAmbulance.point.y + ")");
-                currentNearestStation.assistEmergency(getCurrentEmergency(), decidedHospital);
+
+                // we insert the hospital call here because we don't want to add one patient to the hospital
+                // if there are no available ambulances
+                Patient patient = new Patient(decidedHospital.getReleaseFactor(), false);
+                decidedHospital.addPatient(patient);
+                currentNearestStation.assistEmergency(getCurrentEmergency(), decidedHospital, patient);
                 removeEmergencyFromQueue();
                 System.out.println("queue size: " + emergencies.size());
                 return;

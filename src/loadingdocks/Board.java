@@ -2,7 +2,13 @@ package loadingdocks;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import loadingdocks.Block.Shape;
 
@@ -43,6 +49,8 @@ public class Board {
 	private static int lostEmergencies = 0;
 
 	private static int stepCounter = 1;
+
+	private static FileWriter csvWriter;
 	
 	
 	/****************************
@@ -141,6 +149,40 @@ public class Board {
 			if (ambulance.ambulanceType == Ambulance.AmbulanceType.yellow){
 				yellowAmbulancesObjects[ambulance.point.x][ambulance.point.y] = ambulance;
 			}
+		}
+
+		try {
+
+			File directory = new File("/Users/franciscomatos/Desktop/logs/");
+			if (! directory.exists()){
+				directory.mkdir();
+			}
+
+			csvWriter = new FileWriter("/Users/franciscomatos/Desktop/logs/new.csv", true);
+			csvWriter.append("Emergency Randomness Factor");
+			csvWriter.append(",");
+			csvWriter.append("Emergency Loss Factor");
+			csvWriter.append(",");
+			csvWriter.append("Release Factor");
+			csvWriter.append(",");
+			csvWriter.append("Hospitals Max Capacity");
+			csvWriter.append(",");
+			csvWriter.append("Blue Ambulances");
+			csvWriter.append(",");
+			csvWriter.append("Yellow Ambulances");
+			csvWriter.append(",");
+			csvWriter.append("Red Ambulances");
+			csvWriter.append(",");
+			csvWriter.append("Emergencies in queue");
+			csvWriter.append(",");
+			csvWriter.append("Lost in queue");
+			csvWriter.append("\n");
+
+			System.out.println("apppend");
+			csvWriter.flush();
+
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -345,7 +387,7 @@ public class Board {
 	public static int getHospitalsFull(){
 		int hospitalsFull = 0;
 		for(Hospital hospital : hospitals){
-			if (hospital.getCurrentCapacity() == Board.hospitalsMaxCapacity){
+			if (hospital.getCurrentLotation() == Board.hospitalsMaxCapacity){
 				hospitalsFull++;
 			}
 		}
@@ -382,14 +424,18 @@ public class Board {
 		}
 		
 	    public void run() {
+
 	    	while(true){
 	    		step();
 				try {
 					sleep(time);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
+
 				}
 	    	}
+
+
 	    }
 	}
 	
@@ -414,7 +460,35 @@ public class Board {
 		}
 		displayObjects();
 		GUI.update();
+
+		if(stepCounter % 10 == 0)
+			logData();
+
 		stepCounter++;
+
+
+	}
+
+	public static void logData() {
+
+		List<List<String>> dataLines = new ArrayList<>();
+		dataLines.add(Arrays.asList(String.valueOf(emergenciesRandomness), String.valueOf(emergenciesRandomness),
+				String.valueOf(emergenciesRandomness), String.valueOf(getHospitalsFull()),
+				String.valueOf(blueAmbulances), String.valueOf(yellowAmbulances),
+				String.valueOf(redAmbulances), String.valueOf(getEmergenciesInQueue()), String.valueOf(getLostEmergencies())));
+
+
+		try {
+			for (List<String> rowData : dataLines) {
+				csvWriter.append(String.join(",",  rowData));
+				csvWriter.append("\n");
+			}
+
+			csvWriter.flush();
+
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void stop() {
@@ -424,11 +498,7 @@ public class Board {
 
 	public static void displayObjects(){
 
-		// decrease hospitals capacity
-		if ((time % hospitalsCapacityRandomness == 0) || (stepCounter % hospitalsCapacityRandomness == 0)){
-			int random = rand.nextInt(hospitals.size());
-			hospitals.get(random).decreaseCurrentCapacity();
-		}
+		for(Hospital hospital: getHospitals()) hospital.updatePatients();
 
 		// emergency was lost
 		if ((central.getEmergenciesInQueue() != 0) && (central.getEmergenciesInQueue() % (lostEmergenciesRandomness) == 0)){
@@ -479,4 +549,5 @@ public class Board {
 	public static void associateGUI(GUI graphicalInterface) {
 		GUI = graphicalInterface;
 	}
+
 }

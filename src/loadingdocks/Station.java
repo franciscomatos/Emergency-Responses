@@ -201,10 +201,10 @@ public class Station extends Entity implements Comparable<Station>{
     }
 
     // right now this method simply decreases a counter for testing purposes
-    public void assistEmergency(Emergency emergency, Hospital hospital) {
+    public void assistEmergency(Emergency emergency, Hospital hospital, Patient patient) {
         addEmergency(emergency);
         startEmergencyRequest(closestAmbulance, emergency);
-        closestAmbulance.rescue(emergency, hospital);
+        closestAmbulance.rescue(emergency, hospital, patient);
     }
 
     public Integer manhattanDistance(Point a, Point b) {
