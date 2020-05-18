@@ -22,12 +22,13 @@ public class GUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	static JTextField speed, emergenciesRandomness, blueAmbulances, yellowAmbulances, redAmbulances, hospitalsMaxCapacity;
+	static JTextField speed, emergenciesRandomness, blueAmbulances, yellowAmbulances, redAmbulances, hospitalsMaxCapacity,
+					hospitalsCapacityRandomness, lostEmergenciesRandomness;
 	static JPanel boardPanel;
 	static JButton run, reset, step;
 	static JLabel emergenciesQueue, emergenciesCompleted, lostEmergencies, hospitalsFull;
 	static JButton setSpeed, setEmergenciesRandomness, setBlueAmbulances, setYellowAmbulances, setRedAmbulances,
-					setHospitalsMaxCapacity;
+					setHospitalsMaxCapacity, setHospitalsCapacityRandomness, setLostEmergenciesRandomness;
 	private int nX, nY;
 
 	public class Cell extends JPanel {
@@ -98,6 +99,8 @@ public class GUI extends JFrame {
 		add(hospitalsMaxCapacityPanel());
 		add(emergenciesCompleted());
 		add(lostEmergenciesPanel());
+		add(hospitalsCapacityRandomnessPanel());
+		add(lostEmergenciesRandomness());
 
 		Board.initialize();
 		Board.associateGUI(this);
@@ -275,29 +278,59 @@ public class GUI extends JFrame {
 		return panel;
 	}
 
-	private Component yellowAmbulancesPanel() {
+	private Component hospitalsCapacityRandomnessPanel() {
 		JPanel panel = new JPanel();
-		panel.setSize(new Dimension(200,50));
-		panel.setLocation(new Point(725,250));
+		panel.setSize(new Dimension(225,50));
+		panel.setLocation(new Point(725,150));
 
-		JLabel label = new JLabel("Yellow Ambulances");
+		JLabel label = new JLabel("Hospitals Capacity Randomness");
 		panel.add(label);
-		yellowAmbulances = new JTextField("0");
-		yellowAmbulances.setMargin(new Insets(5,5,5,5));
-		yellowAmbulances.setColumns(5);
-		Board.setYellowAmbulances(Integer.parseInt(yellowAmbulances.getText()));
-		panel.add(yellowAmbulances);
+		hospitalsCapacityRandomness = new JTextField("2");
+		hospitalsCapacityRandomness.setMargin(new Insets(5,5,5,5));
+		hospitalsCapacityRandomness.setColumns(5);
+		Board.setEmergenciesRandomness(Integer.parseInt(hospitalsCapacityRandomness.getText()));
+		panel.add(hospitalsCapacityRandomness);
 
-		setYellowAmbulances = new JButton("Set");
-		panel.add(setYellowAmbulances);
-		setYellowAmbulances.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		setHospitalsCapacityRandomness = new JButton("Set");
+		panel.add(setHospitalsCapacityRandomness);
+		setHospitalsCapacityRandomness.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0){
 				try{
-					Board.setYellowAmbulances(Integer.parseInt(yellowAmbulances.getText()));
+					Board.setHospitalsCapacityRandomness(Integer.parseInt(hospitalsCapacityRandomness.getText()));
 				}catch(Exception e){
-					JTextPane output = new JTextPane();
-					output.setText("Please insert an valid integer value in Yellow ambulances\nValue inserted = "+yellowAmbulances.getText());
-					JOptionPane.showMessageDialog(null, output, "Error", JOptionPane.PLAIN_MESSAGE);
+					JTextPane output=new JTextPane();
+					output.setText("Please insert an valid integer value in Hospitals Capacity Randomness\nValue inserted = "+emergenciesRandomness.getText());
+					JOptionPane.showMessageDialog(null,output,"Error",JOptionPane.PLAIN_MESSAGE);
+				}
+			}
+		});
+
+		return panel;
+	}
+
+	private Component lostEmergenciesRandomness() {
+		JPanel panel = new JPanel();
+		panel.setSize(new Dimension(225,50));
+		panel.setLocation(new Point(725,200));
+
+		JLabel label = new JLabel("Lost Emergencies Randomness");
+		panel.add(label);
+		lostEmergenciesRandomness = new JTextField("2");
+		lostEmergenciesRandomness.setMargin(new Insets(5,5,5,5));
+		lostEmergenciesRandomness.setColumns(5);
+		Board.setEmergenciesRandomness(Integer.parseInt(lostEmergenciesRandomness.getText()));
+		panel.add(lostEmergenciesRandomness);
+
+		setLostEmergenciesRandomness = new JButton("Set");
+		panel.add(setLostEmergenciesRandomness);
+		setLostEmergenciesRandomness.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0){
+				try{
+					Board.setLostEmergenciesRandomness(Integer.parseInt(lostEmergenciesRandomness.getText()));
+				}catch(Exception e){
+					JTextPane output=new JTextPane();
+					output.setText("Please insert an valid integer value in Lost Emergencies Randomness\nValue inserted = "+emergenciesRandomness.getText());
+					JOptionPane.showMessageDialog(null,output,"Error",JOptionPane.PLAIN_MESSAGE);
 				}
 			}
 		});
@@ -308,7 +341,7 @@ public class GUI extends JFrame {
 	private Component blueAmbulancesPanel() {
 		JPanel panel = new JPanel();
 		panel.setSize(new Dimension(200,50));
-		panel.setLocation(new Point(725,200));
+		panel.setLocation(new Point(725,300));
 
 		JLabel label = new JLabel("Blue Ambulances");
 		panel.add(label);
@@ -335,10 +368,40 @@ public class GUI extends JFrame {
 		return panel;
 	}
 
+	private Component yellowAmbulancesPanel() {
+		JPanel panel = new JPanel();
+		panel.setSize(new Dimension(200,50));
+		panel.setLocation(new Point(725,350));
+
+		JLabel label = new JLabel("Yellow Ambulances");
+		panel.add(label);
+		yellowAmbulances = new JTextField("0");
+		yellowAmbulances.setMargin(new Insets(5,5,5,5));
+		yellowAmbulances.setColumns(5);
+		Board.setYellowAmbulances(Integer.parseInt(yellowAmbulances.getText()));
+		panel.add(yellowAmbulances);
+
+		setYellowAmbulances = new JButton("Set");
+		panel.add(setYellowAmbulances);
+		setYellowAmbulances.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try{
+					Board.setYellowAmbulances(Integer.parseInt(yellowAmbulances.getText()));
+				}catch(Exception e){
+					JTextPane output = new JTextPane();
+					output.setText("Please insert an valid integer value in Yellow ambulances\nValue inserted = "+yellowAmbulances.getText());
+					JOptionPane.showMessageDialog(null, output, "Error", JOptionPane.PLAIN_MESSAGE);
+				}
+			}
+		});
+
+		return panel;
+	}
+
 	private Component redAmbulancesPanel() {
 		JPanel panel = new JPanel();
 		panel.setSize(new Dimension(200,50));
-		panel.setLocation(new Point(725,300));
+		panel.setLocation(new Point(725,400));
 
 		JLabel label = new JLabel("Red Ambulances ");
 		panel.add(label);
