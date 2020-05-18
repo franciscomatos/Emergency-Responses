@@ -18,6 +18,8 @@ public class Station extends Entity implements Comparable<Station>{
 
     public Ambulance closestAmbulance;
 
+    public int emergenciesCompleted;
+
     public Station(Point point, Color color, int blueAmbulances, int yellowAmbulances, int redAmbulances){
 
         super(point, color);
@@ -33,6 +35,8 @@ public class Station extends Entity implements Comparable<Station>{
         for(int i = 0; i < yellowAmbulances; i++){
             this.ambulances.add(new Ambulance(new Point(point.x, point.y), Color.yellow, Ambulance.AmbulanceType.yellow, this));
         }
+
+        emergenciesCompleted = 0;
     }
 
     public void addBlueAmbulances(int ambulancesToAdd){
@@ -134,6 +138,7 @@ public class Station extends Entity implements Comparable<Station>{
 
     public void finishEmergencyRequest(Ambulance _ambulance){
         emergencyRequests.remove(_ambulance);
+        emergenciesCompleted++;
     }
 
     public void addEmergency(Emergency emergency){
@@ -260,6 +265,10 @@ public class Station extends Entity implements Comparable<Station>{
         }
 
         return minimumAmbulanceDistance().compareTo(s.minimumAmbulanceDistance());
+    }
+
+    public int getEmergenciesCompleted() {
+        return emergenciesCompleted;
     }
 }
 
