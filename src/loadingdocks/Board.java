@@ -342,13 +342,13 @@ public class Board {
 		return hospitalsFull;
 	}
 
-	public static int getMediumTimeToReachHospital(){
-		int timeToReachHospital = 0;
-		for(Ambulance ambulance : ambulances){
-			timeToReachHospital+= ambulance.getTimeToReachHospital();
+	public static int getEmergenciesCompleted(){
+		int emergenciesCompleted = 0;
+		for(Station s : stations){
+			emergenciesCompleted += s.getEmergenciesCompleted();
 		}
 
-		return timeToReachHospital/ambulances.size();
+		return emergenciesCompleted;
 	}
 
 	/***********************************

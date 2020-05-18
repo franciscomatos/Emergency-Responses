@@ -25,7 +25,9 @@ public class GUI extends JFrame {
 	static JTextField speed, emergenciesRandomness, blueAmbulances, yellowAmbulances, redAmbulances, hospitalsMaxCapacity;
 	static JPanel boardPanel;
 	static JButton run, reset, step;
-	static JLabel emergenciesQueue, timeToReachHospital, lostEmergencies, hospitalsFull;
+	static JLabel emergenciesQueue, emergenciesCompleted, lostEmergencies, hospitalsFull;
+	static JButton setSpeed, setEmergenciesRandomness, setBlueAmbulances, setYellowAmbulances, setRedAmbulances,
+					setHospitalsMaxCapacity;
 	private int nX, nY;
 
 	public class Cell extends JPanel {
@@ -83,7 +85,7 @@ public class GUI extends JFrame {
 	}
 
 	public GUI() {
-		setTitle("FirePrevention");
+		setTitle("Emergency Responses");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
 		setSize(1000, 900);
@@ -94,7 +96,7 @@ public class GUI extends JFrame {
 		add(emergenciesQueuePanel());
 		add(emergenciesRandomnessPanel());
 		add(hospitalsMaxCapacityPanel());
-		add(timeToReachHospitalPanel());
+		add(emergenciesCompleted());
 		add(lostEmergenciesPanel());
 
 		Board.initialize();
@@ -152,7 +154,7 @@ public class GUI extends JFrame {
 			p.setBackground(object.color);
 		}
 		else if (object instanceof Station){
-			timeToReachHospital.setText("Average time to reach Hospital: " + Board.getMediumTimeToReachHospital());
+			emergenciesCompleted.setText("Emergencies completed: " + Board.getEmergenciesCompleted());
 		}
 		emergenciesQueue.setText("Emergencies in wait: " + Board.getEmergenciesInQueue());
 		lostEmergencies.setText("Lost Emergencies: " + Board.getLostEmergencies());
@@ -222,18 +224,14 @@ public class GUI extends JFrame {
 		panel.add(label);
 		hospitalsMaxCapacity = new JTextField("1");
 		hospitalsMaxCapacity.setMargin(new Insets(5,5,5,5));
-		hospitalsMaxCapacity.setColumns(3);
+		hospitalsMaxCapacity.setColumns(5);
 		Board.setHospitalsMaxCapacity(Integer.parseInt(hospitalsMaxCapacity.getText()));
 		panel.add(hospitalsMaxCapacity);
 
-		hospitalsMaxCapacity.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent focusEvent) {
-
-			}
-
-			@Override
-			public void focusLost(FocusEvent focusEvent) {
+		setHospitalsMaxCapacity = new JButton("Set");
+		panel.add(setHospitalsMaxCapacity);
+		setHospitalsMaxCapacity.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				try{
 					Board.setHospitalsMaxCapacity(Integer.parseInt(hospitalsMaxCapacity.getText()));
 				}catch(Exception e){
@@ -256,24 +254,20 @@ public class GUI extends JFrame {
 		panel.add(label);
 		emergenciesRandomness = new JTextField("2");
 		emergenciesRandomness.setMargin(new Insets(5,5,5,5));
-		emergenciesRandomness.setColumns(3);
+		emergenciesRandomness.setColumns(5);
 		Board.setEmergenciesRandomness(Integer.parseInt(emergenciesRandomness.getText()));
 		panel.add(emergenciesRandomness);
 
-		emergenciesRandomness.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent focusEvent) {
-
-			}
-
-			@Override
-			public void focusLost(FocusEvent focusEvent) {
+		setEmergenciesRandomness = new JButton("Set");
+		panel.add(setEmergenciesRandomness);
+		setEmergenciesRandomness.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0){
 				try{
 					Board.setEmergenciesRandomness(Integer.parseInt(emergenciesRandomness.getText()));
 				}catch(Exception e){
-					JTextPane output = new JTextPane();
+					JTextPane output=new JTextPane();
 					output.setText("Please insert an valid integer value in Emergencies Randomness\nValue inserted = "+emergenciesRandomness.getText());
-					JOptionPane.showMessageDialog(null, output, "Error", JOptionPane.PLAIN_MESSAGE);
+					JOptionPane.showMessageDialog(null,output,"Error",JOptionPane.PLAIN_MESSAGE);
 				}
 			}
 		});
@@ -290,18 +284,14 @@ public class GUI extends JFrame {
 		panel.add(label);
 		yellowAmbulances = new JTextField("0");
 		yellowAmbulances.setMargin(new Insets(5,5,5,5));
-		yellowAmbulances.setColumns(3);
+		yellowAmbulances.setColumns(5);
 		Board.setYellowAmbulances(Integer.parseInt(yellowAmbulances.getText()));
 		panel.add(yellowAmbulances);
 
-		yellowAmbulances.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent focusEvent) {
-
-			}
-
-			@Override
-			public void focusLost(FocusEvent focusEvent) {
+		setYellowAmbulances = new JButton("Set");
+		panel.add(setYellowAmbulances);
+		setYellowAmbulances.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				try{
 					Board.setYellowAmbulances(Integer.parseInt(yellowAmbulances.getText()));
 				}catch(Exception e){
@@ -324,18 +314,14 @@ public class GUI extends JFrame {
 		panel.add(label);
 		blueAmbulances = new JTextField("1");
 		blueAmbulances.setMargin(new Insets(5,5,5,5));
-		blueAmbulances.setColumns(3);
+		blueAmbulances.setColumns(5);
 		Board.setBlueAmbulances(Integer.parseInt(blueAmbulances.getText()));
 		panel.add(blueAmbulances);
 
-		blueAmbulances.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent focusEvent) {
-
-			}
-
-			@Override
-			public void focusLost(FocusEvent focusEvent) {
+		setBlueAmbulances = new JButton("Set");
+		panel.add(setBlueAmbulances);
+		setBlueAmbulances.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				try{
 					Board.setBlueAmbulances(Integer.parseInt(blueAmbulances.getText()));
 				}catch(Exception e){
@@ -354,22 +340,18 @@ public class GUI extends JFrame {
 		panel.setSize(new Dimension(200,50));
 		panel.setLocation(new Point(725,300));
 
-		JLabel label = new JLabel("Red Ambulances");
+		JLabel label = new JLabel("Red Ambulances ");
 		panel.add(label);
 		redAmbulances = new JTextField("0");
 		redAmbulances.setMargin(new Insets(5,5,5,5));
-		redAmbulances.setColumns(3);
+		redAmbulances.setColumns(5);
 		Board.setRedAmbulances(Integer.parseInt(redAmbulances.getText()));
 		panel.add(redAmbulances);
 
-		redAmbulances.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent focusEvent) {
-
-			}
-
-			@Override
-			public void focusLost(FocusEvent focusEvent) {
+		setRedAmbulances = new JButton("Set");
+		panel.add(setRedAmbulances);
+		setRedAmbulances.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				try{
 					Board.setRedAmbulances(Integer.parseInt(redAmbulances.getText()));
 				}catch(Exception e){
@@ -385,24 +367,24 @@ public class GUI extends JFrame {
 	}
 
 	private Component emergenciesQueuePanel() {
-		emergenciesQueue = new JLabel("Emergencies in wait: 0");
-		emergenciesQueue.setSize(new Dimension(150,50));
+		emergenciesQueue = new JLabel("Emergencies in queue: 0");
+		emergenciesQueue.setSize(new Dimension(500,50));
 		emergenciesQueue.setLocation(new Point(600,-15));
 
 		return emergenciesQueue;
 	}
 
-	private Component timeToReachHospitalPanel() {
-		timeToReachHospital = new JLabel("Average time to reach Hospital per station: 0");
-		timeToReachHospital.setSize(new Dimension(225,50));
-		timeToReachHospital.setLocation(new Point(600,0));
+	private Component emergenciesCompleted() {
+		emergenciesCompleted = new JLabel("Emergencies Completed: 0");
+		emergenciesCompleted.setSize(new Dimension(500,50));
+		emergenciesCompleted.setLocation(new Point(600,0));
 
-		return timeToReachHospital;
+		return emergenciesCompleted;
 	}
 
 	private Component lostEmergenciesPanel() {
 		lostEmergencies = new JLabel("Emergencies Lost: 0");
-		lostEmergencies.setSize(new Dimension(200,50));
+		lostEmergencies.setSize(new Dimension(500,50));
 		lostEmergencies.setLocation(new Point(600,15));
 
 		return lostEmergencies;
@@ -410,7 +392,7 @@ public class GUI extends JFrame {
 
 	private Component hospitalsFullPanel() {
 		hospitalsFull = new JLabel("Hospitals Full: " + Board.getHospitalsFull() + "/" + Board.getHospitals().size());
-		hospitalsFull.setSize(new Dimension(200,50));
+		hospitalsFull.setSize(new Dimension(500,50));
 		hospitalsFull.setLocation(new Point(600,30));
 
 		return hospitalsFull;
