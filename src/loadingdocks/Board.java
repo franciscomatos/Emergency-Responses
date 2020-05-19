@@ -42,6 +42,7 @@ public class Board {
 	private static int redAmbulances;
 	private static int emergenciesRandomness;
 	private static int hospitalsMaxCapacity;
+    private static boolean conservativeAmbulancesBehavior;
 
 	private static int hospitalsCapacityRandomness = 10;
 	private static int lostEmergenciesRandomness = 10;
@@ -51,7 +52,8 @@ public class Board {
 	private static int stepCounter = 1;
 
 	private static FileWriter csvWriter;
-	private static String LOGSDIRECTORY = "/home/spike/meic/AasmaProject/logs";
+    private static String CURRENTDIRECTORY = System.getProperty("user.dir");
+    private static File LOGSDIRECTORY = new File(CURRENTDIRECTORY, "logs");
 	
 	
 	/****************************
@@ -151,9 +153,9 @@ public class Board {
 			}
 		}
 
-		File directory = new File(LOGSDIRECTORY);
-		if (! directory.exists()){
-			directory.mkdir();
+		//File directory = new File(LOGSDIRECTORY);
+		if (!LOGSDIRECTORY.exists()){
+            LOGSDIRECTORY.mkdir();
 		}
 	}
 	
@@ -380,6 +382,14 @@ public class Board {
 		return emergenciesCompleted;
 	}
 
+    public static boolean getConservativeAmbulancesBehavior() {
+        return conservativeAmbulancesBehavior;
+    }
+
+    public static void setConservativeAmbulancesBehavior(boolean conservativeAmbulancesBehavior) {
+        Board.conservativeAmbulancesBehavior = conservativeAmbulancesBehavior;
+    }
+
 	/***********************************
 	 ***** C: ELICIT AGENT ACTIONS *****
 	 ***********************************/
@@ -424,17 +434,15 @@ public class Board {
 		stepCounter = 1;
 		lostEmergencies = 0;
 		for (Station s: stations) s.setEmergenciesCompleted(0);
-        for (Emergency e : emergencies) GUI.removeObject(e);
 		removeObjects();
 		initialize();
 		GUI.displayBoard();
-		//displayInitialObjects();
 		displayObjects();
 		GUI.update();
 	}
 
 	public static void step() {
-		removeObjects();
+		//removeObjects();
 		for (Ambulance ambulance : ambulances) {
 			ambulance.decide();
 		}
@@ -502,6 +510,11 @@ public class Board {
 
 	public static void displayObjects(){
 
+		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
+		for(Station station : stations) GUI.displayObject(station);
+		for(Hospital hospital : hospitals) GUI.displayObject(hospital);
+		for (Ambulance ambulance : ambulances) GUI.displayObject(ambulance);
+
 		for(Hospital hospital: getHospitals()) hospital.updatePatients();
 
 		// emergency was lost
@@ -514,7 +527,7 @@ public class Board {
 		}
 
 		// creating new emergency
-		if ((time % emergenciesRandomness == 0) || (stepCounter % emergenciesRandomness == 0)){
+		if (stepCounter % emergenciesRandomness == 0){
 			int x = -1;
 			int y = -1;
 			while (isOcean(x, y)) {
@@ -533,17 +546,14 @@ public class Board {
 				// central receives the emergency request and selects nearest station
 				central.addEmergencyToQueue(emergency);
 				GUI.displayObject(emergency);
+				GUI.displayBoard();
 			}
 		}
 		central.selectNearestStation();
-		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
-		for(Station station : stations) GUI.displayObject(station);
-		for(Hospital hospital : hospitals) GUI.displayObject(hospital);
-		for (Ambulance ambulance : ambulances) GUI.displayObject(ambulance);
 	}
 	
 	public static void removeObjects(){
-		//for(Emergency emergency: emergencies) GUI.removeObject(emergency);
+		for(Emergency emergency: emergencies) GUI.removeObject(emergency);
 		for(Ambulance ambulance: ambulances) GUI.removeObject(ambulance);
 	}
 	
@@ -551,8 +561,11 @@ public class Board {
 		GUI = graphicalInterface;
 	}
 
-	public static void displayInitialObjects(){
-        for(Station station : stations) GUI.displayObject(station);
-        for(Hospital hospital : hospitals) GUI.displayObject(hospital);
-    }
+	public static void removeObject(Entity entity){
+		GUI.removeObject(entity);
+	}
+
+	public static void displayObject(Entity entity){
+		GUI.displayObject(entity);
+	}
 }
