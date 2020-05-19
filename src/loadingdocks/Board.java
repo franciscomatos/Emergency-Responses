@@ -151,10 +151,10 @@ public class Board {
 			}
 		}
 
-			File directory = new File(LOGSDIRECTORY);
-			if (! directory.exists()){
-				directory.mkdir();
-			}
+		File directory = new File(LOGSDIRECTORY);
+		if (! directory.exists()){
+			directory.mkdir();
+		}
 	}
 	
 	/****************************
@@ -302,6 +302,7 @@ public class Board {
 		emergencies.remove(emergency);
 		removeBlock(emergency.point);
 		removeEntity(emergency.point);
+		GUI.removeObject(emergency);
 	}
 
 	public static Block getBlock(Point point) {
@@ -423,10 +424,12 @@ public class Board {
 		stepCounter = 1;
 		lostEmergencies = 0;
 		for (Station s: stations) s.setEmergenciesCompleted(0);
+        for (Emergency e : emergencies) GUI.removeObject(e);
 		removeObjects();
 		initialize();
 		GUI.displayBoard();
-		displayObjects();	
+		//displayInitialObjects();
+		displayObjects();
 		GUI.update();
 	}
 
@@ -533,17 +536,14 @@ public class Board {
 			}
 		}
 		central.selectNearestStation();
-		for (Ambulance ambulance : ambulances) {
-			updateEntityPosition(ambulance.point, ambulance.point, ambulance.ambulanceType);
-			GUI.displayObject(ambulance);
-		}
 		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
 		for(Station station : stations) GUI.displayObject(station);
 		for(Hospital hospital : hospitals) GUI.displayObject(hospital);
+		for (Ambulance ambulance : ambulances) GUI.displayObject(ambulance);
 	}
 	
 	public static void removeObjects(){
-		for(Emergency emergency: emergencies) GUI.removeObject(emergency);
+		//for(Emergency emergency: emergencies) GUI.removeObject(emergency);
 		for(Ambulance ambulance: ambulances) GUI.removeObject(ambulance);
 	}
 	
@@ -551,4 +551,8 @@ public class Board {
 		GUI = graphicalInterface;
 	}
 
+	public static void displayInitialObjects(){
+        for(Station station : stations) GUI.displayObject(station);
+        for(Hospital hospital : hospitals) GUI.displayObject(hospital);
+    }
 }

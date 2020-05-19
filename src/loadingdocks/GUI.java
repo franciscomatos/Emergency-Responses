@@ -121,6 +121,7 @@ public class GUI extends JFrame {
 
 		displayBoard();
 		Board.displayObjects();
+		//Board.displayInitialObjects();
 		update();
 		add(boardPanel);
 	}
@@ -140,12 +141,11 @@ public class GUI extends JFrame {
 	public void removeObject(Entity object) {
 		int row=nY-object.point.y-1, col=object.point.x;
 		Cell p = (Cell)boardPanel.getComponent(row*nX+col);
-		p.setBorder(BorderFactory.createLineBorder(Color.white));
-		p.entity = null;
-
 		if (object instanceof Emergency){
 			p.setBackground(Color.lightGray);
 		}
+		p.setBorder(BorderFactory.createLineBorder(Color.white));
+		p.entity = null;
 	}
 
 	public void displayObject(Entity object) {

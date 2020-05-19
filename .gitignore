@@ -1,3 +1,4 @@
 /bin
 .idea/
 /src/loadingdocks/.idea
+/.vs/slnx.sqlite
