@@ -51,7 +51,7 @@ public class Board {
 	private static int stepCounter = 1;
 
 	private static FileWriter csvWriter;
-	private static String LOGSDIRECTORY = System.getProperty("user.dir");
+	private static String LOGSDIRECTORY = "/home/spike/meic/AasmaProject/logs";
 	
 	
 	/****************************
@@ -441,7 +441,7 @@ public class Board {
 		displayObjects();
 		GUI.update();
 
-		if(stepCounter % 10 == 0)
+		if(stepCounter % 1000 == 0)
 			logData();
 
 
