@@ -38,6 +38,8 @@ public class Central {
         return emergencies.size();
     }
 
+    public List<Emergency> getEmergencies() { return this.emergencies; }
+
     public void selectNearestStation() {
         if(emergencies.isEmpty()) {
             System.out.println("no current emergencies to handle");
@@ -68,6 +70,12 @@ public class Central {
         if (decidedHospital == null) {
             System.out.println("can't receive emergency due to the lack of hospitals. Emergency will be kept in queue");
             System.out.println("queue size: " + emergencies.size());
+            
+            Emergency failedEmergency = getCurrentEmergency();
+            emergencies.remove(failedEmergency); // remove from the head
+            emergencies.add(failedEmergency); // add to the tail
+            System.out.println("Queue head: (" + getCurrentEmergency().point.x + "," + getCurrentEmergency().point.y + ")");
+            System.out.println("Queue tail: (" + emergencies.get(emergencies.size()-1).point.x + "," + emergencies.get(emergencies.size()-1).point.y + ")");
             return;
         }
 
@@ -94,6 +102,8 @@ public class Central {
         Emergency failedEmergency = getCurrentEmergency();
         emergencies.remove(failedEmergency); // remove from the head
         emergencies.add(failedEmergency); // add to the tail
+        System.out.println("Queue head: (" + getCurrentEmergency().point.x + "," + getCurrentEmergency().point.y + ")");
+        System.out.println("Queue tail: (" + emergencies.get(emergencies.size()-1).point.x + "," + emergencies.get(emergencies.size()-1).point.y + ")");
         System.out.println("queue size: " + emergencies.size());
 
         // if the method reaches this point it means there are no available ambulances, so the request needs to be kept in a queue

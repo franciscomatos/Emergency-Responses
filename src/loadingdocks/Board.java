@@ -504,17 +504,15 @@ public class Board {
 
 		for(Hospital hospital: getHospitals()) hospital.updatePatients();
 
-		for(Emergency emergency: emergencies) emergency.updateEmergency();
+		for(Emergency emergency: central.getEmergencies()) emergency.updateEmergency();
 
-		Iterator<Emergency> emergencyIterator = emergencies.iterator();
+		Iterator<Emergency> emergencyIterator = central.getEmergencies().iterator();
 		while (emergencyIterator.hasNext()) {
 			Emergency e = emergencyIterator.next();
 			if(e.hasExpired()) {
-				central.removeEmergency(e);
+				System.out.println("gonna remove emergency at: " + e.point.x + "," + e.point.y);
 				emergencyIterator.remove();
-				removeBlock(e.point);
-				removeEntity(e.point);
-				GUI.removeObject(e);
+				removeEmergency(e);
 				lostEmergencies++;
 			}
 		}
