@@ -51,7 +51,7 @@ public class Board {
 	private static int stepCounter = 1;
 
 	private static FileWriter csvWriter;
-	private static String LOGSDIRECTORY = "/home/spike/meic/AasmaProject/logs";
+	private static String LOGSDIRECTORY = "/Users/franciscomatos/Dropbox/MEIC/1ºAno/2ºSemestre/AASMA/Project/AasmaProject/logs";
 	
 	
 	/****************************
@@ -504,17 +504,32 @@ public class Board {
 
 		for(Hospital hospital: getHospitals()) hospital.updatePatients();
 
-		// emergency was lost
-		if ((central.getEmergenciesInQueue() != 0) && (central.getEmergenciesInQueue() % (lostEmergenciesRandomness) == 0)){
-			Emergency e = central.removeEmergencyFromQueue();
-			if (e != null){
-				removeEmergency(e);
+		for(Emergency emergency: emergencies) emergency.updateEmergency();
+
+		Iterator<Emergency> emergencyIterator = emergencies.iterator();
+		while (emergencyIterator.hasNext()) {
+			Emergency e = emergencyIterator.next();
+			if(e.hasExpired()) {
+				central.removeEmergency(e);
+				emergencyIterator.remove();
+				removeBlock(e.point);
+				removeEntity(e.point);
+				GUI.removeObject(e);
 				lostEmergencies++;
 			}
 		}
 
+		// emergency was lost
+//		if (central.getEmergenciesInQueue() % lostEmergenciesRandomness == 0){
+//			Emergency e = central.removeEmergencyFromQueue();
+//			if (e != null){
+//				removeEmergency(e);
+//				lostEmergencies++;
+//			}
+//		}
+
 		// creating new emergency
-		if ((time % emergenciesRandomness == 0) || (stepCounter % emergenciesRandomness == 0)){
+		if (stepCounter % emergenciesRandomness == 0){
 			int x = -1;
 			int y = -1;
 			while (isOcean(x, y)) {
@@ -524,7 +539,7 @@ public class Board {
 			if (getEntity(new Point(x,y)) == null){
 				int randomGravity = rand.nextInt(Emergency.EmergencyGravity.values().length);
 				Emergency.EmergencyGravity gravity = Collections.unmodifiableList(Arrays.asList(Emergency.EmergencyGravity.values())).get(randomGravity);
-				Emergency emergency = new Emergency(new Point(x, y), Color.orange, gravity);
+				Emergency emergency = new Emergency(new Point(x, y), Color.orange, gravity, lostEmergenciesRandomness);
 				emergencies.add(emergency);
 
 				insertBlock(emergency.point, Shape.emergency, emergency.color);
