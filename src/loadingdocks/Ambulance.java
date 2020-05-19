@@ -1,7 +1,9 @@
 package loadingdocks;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 
 public class Ambulance extends Entity implements Comparable<Ambulance>{
@@ -66,13 +68,11 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
             System.out.println("Ambulance picked up patient");
             pickupPatient();
             this.station.finishEmergencyRequest(this);
-            this.station.removeEmergency(this.emergency);
+            Board.removeEmergency(this.emergency);
         }
         else if (!this.available && this.hasPatient && this.point.equals(this.hospital.point)) {
             System.out.println("Ambulance dropped patient");
             dropPatient();
-//            this.timeToReachHospital = Board.getTime(); // maybe add steps too.
-            //this.hospital.increaseCurrentCapacity();
         }
         else if (!this.available || this.available && !this.point.equals((this.station.point))) {
             move();
@@ -95,6 +95,9 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
             nextPosition = nextPosition(this.hospital.point);
         }
         Board.updateEntityPosition(this.point, nextPosition, this.ambulanceType);
+        Board.removeObject(this);
+        this.point = nextPosition;
+        Board.displayObject(this);
         this.point = nextPosition;
     }
 
@@ -150,15 +153,27 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
         if (entity == null){ // || entity instanceof Emergency
             return true;
         }
-        else if ((this.hospital.point.x == nextX && this.hospital.point.y == nextY) ||
-                (this.emergency.point.x == nextX && this.emergency.point.y == nextY) ||
-                (this.station.point.x == nextX && this.station.point.y == nextY)
-        ){
+        else if (isAtHospital(new Point(nextX, nextY)) ||
+                isAtEmergency(new Point(nextX, nextY)) ||
+                isAtStation(new Point(nextX, nextY)))
+        {
             return true;
         }
         else{
             return false;
         }
+    }
+
+    public boolean isAtStation(Point point){
+        return this.station.point.x == point.x && this.station.point.y == point.y;
+    }
+
+    public boolean isAtEmergency(Point point){
+        return this.emergency.point.x == point.x && this.emergency.point.y == point.y;
+    }
+
+    public boolean isAtHospital(Point point){
+        return this.hospital.point.x == point.x && this.hospital.point.y == point.y;
     }
 
     public void updateDirection(int dX, int dY, int nextX, int nextY) {
