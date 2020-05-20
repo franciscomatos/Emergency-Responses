@@ -7,13 +7,13 @@ public class Central {
 
     private static List<Station> stations;
     private static List<Hospital> hospitals;
-    private Queue<Emergency> emergencies;
+    private List<Emergency> emergencies;
     private Emergency currentEmergency;
 
     public Central(List<Station> stations, List<Hospital> hospitals){
         this.stations = stations;
         this.hospitals = hospitals;
-        this.emergencies = new LinkedList<>();
+        this.emergencies = new ArrayList<>();
     }
 
     public static List<Station> getStations() {
@@ -28,16 +28,20 @@ public class Central {
 
     public void addEmergencyToQueue(Emergency e) { this.emergencies.add(e); }
 
-    public Emergency getCurrentEmergency() { return this.emergencies.peek(); }
+    public Emergency getCurrentEmergency() { return this.emergencies.get(0); }
 
-    public Emergency removeEmergencyFromQueue() { return this.emergencies.poll(); }
+    // public Emergency removeEmergencyFromQueue() { return this.emergencies.poll(); }
+
+    public void removeEmergency(Emergency e) { this.emergencies.remove(e); }
 
     public int getEmergenciesInQueue(){
         return emergencies.size();
     }
 
+    public List<Emergency> getEmergencies() { return this.emergencies; }
+
     public void selectNearestStation() {
-        if(getCurrentEmergency() == null) {
+        if(emergencies.isEmpty()) {
             System.out.println("no current emergencies to handle");
             return;
         }
@@ -66,6 +70,12 @@ public class Central {
         if (decidedHospital == null) {
             System.out.println("can't receive emergency due to the lack of hospitals. Emergency will be kept in queue");
             System.out.println("queue size: " + emergencies.size());
+            
+            Emergency failedEmergency = getCurrentEmergency();
+            emergencies.remove(failedEmergency); // remove from the head
+            emergencies.add(failedEmergency); // add to the tail
+            System.out.println("Queue head: (" + getCurrentEmergency().point.x + "," + getCurrentEmergency().point.y + ")");
+            System.out.println("Queue tail: (" + emergencies.get(emergencies.size()-1).point.x + "," + emergencies.get(emergencies.size()-1).point.y + ")");
             return;
         }
 
@@ -82,12 +92,18 @@ public class Central {
                 Patient patient = new Patient(decidedHospital.getReleaseFactor(), false);
                 decidedHospital.addPatient(patient);
                 currentNearestStation.assistEmergency(getCurrentEmergency(), decidedHospital, patient);
-                removeEmergencyFromQueue();
+                removeEmergency(getCurrentEmergency());
                 System.out.println("queue size: " + emergencies.size());
                 return;
             }
         }
-        System.out.println("can't receive emergency due to the lack of ambulances. Emergency will be kept in queue");
+
+        System.out.println("can't receive emergency due to the lack of ambulances. Emergency will return to the end of the queue");
+        Emergency failedEmergency = getCurrentEmergency();
+        emergencies.remove(failedEmergency); // remove from the head
+        emergencies.add(failedEmergency); // add to the tail
+        System.out.println("Queue head: (" + getCurrentEmergency().point.x + "," + getCurrentEmergency().point.y + ")");
+        System.out.println("Queue tail: (" + emergencies.get(emergencies.size()-1).point.x + "," + emergencies.get(emergencies.size()-1).point.y + ")");
         System.out.println("queue size: " + emergencies.size());
 
         // if the method reaches this point it means there are no available ambulances, so the request needs to be kept in a queue
