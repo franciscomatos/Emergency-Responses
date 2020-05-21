@@ -52,8 +52,8 @@ public class Board {
 	private static int stepCounter = 1;
 
 	private static FileWriter csvWriter;
-  private static String CURRENTDIRECTORY = System.getProperty("user.dir");
-  private static File LOGSDIRECTORY = new File(CURRENTDIRECTORY, "logs");
+    private static String CURRENTDIRECTORY = System.getProperty("user.dir");
+    private static File LOGSDIRECTORY = new File(CURRENTDIRECTORY, "logs");
 	
 	
 	/****************************

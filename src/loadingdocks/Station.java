@@ -100,17 +100,20 @@ public class Station extends Entity implements Comparable<Station>{
     }
 
     public List<Ambulance> getClosestGravityAmbulances(Emergency.EmergencyGravity gravity){
+        // if low emergency, any ambulance can do it
         if (gravity == Emergency.EmergencyGravity.Low){
             List<Ambulance> ambulances = getBlueAmbulances();
             ambulances.addAll(getYellowAmbulances());
             ambulances.addAll(getRedAmbulances());
             return ambulances;
         }
-        if (gravity == Emergency.EmergencyGravity.Medium){
+        // if medium, only yellow and red
+        else if (gravity == Emergency.EmergencyGravity.Medium){
             List<Ambulance> ambulances = getYellowAmbulances();
             ambulances.addAll(getRedAmbulances());
             return ambulances;
         }
+        // if high, only red
         else{
             List<Ambulance> ambulances = getRedAmbulances();
             return ambulances;
@@ -236,7 +239,7 @@ public class Station extends Entity implements Comparable<Station>{
         Emergency e = central.getCurrentEmergency();
 
         if (Board.getConservativeAmbulancesBehavior()){
-            System.out.println("conservativeDecision selected.");
+            //System.out.println("conservativeDecision selected.");
             for(Ambulance ambulance: getAmbulances(e.gravity)) {
                 if(ambulance.available) {
                     Integer currentDistance = manhattanDistance(ambulance.point, e.point);
@@ -248,7 +251,7 @@ public class Station extends Entity implements Comparable<Station>{
             }
         }
         else{
-            System.out.println("risky selected.");
+            //System.out.println("risky selected.");
             for (Ambulance ambulance : getClosestGravityAmbulances(e.gravity)) {
                 System.out.println(ambulance.color);
                 if (ambulance.available) {
