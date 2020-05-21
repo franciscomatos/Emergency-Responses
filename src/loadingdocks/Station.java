@@ -100,21 +100,25 @@ public class Station extends Entity implements Comparable<Station>{
     }
 
     public List<Ambulance> getClosestGravityAmbulances(Emergency.EmergencyGravity gravity){
+        // if low emergency, any ambulance can do it
         if (gravity == Emergency.EmergencyGravity.Low){
             List<Ambulance> ambulances = this.ambulances;
             Collections.sort(ambulances);
             return ambulances;
         }
-        if (gravity == Emergency.EmergencyGravity.Medium){
-            List<Ambulance> ambulances = getBlueAmbulances();
+        // if medium, only yellow and red
+        else if (gravity == Emergency.EmergencyGravity.Medium){
+            List<Ambulance> ambulances = getYellowAmbulances();
             ambulances.addAll(getRedAmbulances());
-            ambulances.addAll(getYellowAmbulances());
+            Collections.sort(ambulances);
+            //ambulances.addAll(getYellowAmbulances());
             return ambulances;
         }
+        // if high, only red
         else{
-            List<Ambulance> ambulances = this.ambulances;
+            List<Ambulance> ambulances = getRedAmbulances();
             Collections.sort(ambulances);
-            Collections.reverse(ambulances);
+            //Collections.reverse(ambulances);
             return ambulances;
         }
     }
@@ -237,11 +241,11 @@ public class Station extends Entity implements Comparable<Station>{
         closestAmbulance = null;
 
         if (Board.getConservativeAmbulancesBehavior()){
-            System.out.println("conservativeDecision selected.");
+            //System.out.println("conservativeDecision selected.");
             for(Ambulance ambulance: getAmbulances(central.getCurrentEmergency().gravity)) {
                 if(ambulance.available) {
                     Integer currentDistance = manhattanDistance(ambulance.point, central.getCurrentEmergency().point);
-                    if (currentDistance <= minimumDistance) {
+                    if (currentDistance < minimumDistance) {
                         minimumDistance = currentDistance;
                         closestAmbulance = ambulance;
                     }
@@ -249,11 +253,11 @@ public class Station extends Entity implements Comparable<Station>{
             }
         }
         else{
-            System.out.println("risky selected.");
+            //System.out.println("risky selected.");
             for (Ambulance ambulance : getClosestGravityAmbulances(central.getCurrentEmergency().gravity)) {
                 if (ambulance.available) {
                     Integer currentDistance = manhattanDistance(ambulance.point, central.getCurrentEmergency().point);
-                    if (currentDistance <= minimumDistance) {
+                    if (currentDistance < minimumDistance) {
                         minimumDistance = currentDistance;
                         closestAmbulance = ambulance;
                     }
