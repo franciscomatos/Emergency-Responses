@@ -460,7 +460,12 @@ public class Board {
 
 	public static void logData() {
 		try {
-			String filename = String.valueOf(emergenciesRandomness)
+			String filename = "";
+			if (conservativeAmbulancesBehavior)
+				filename += "conservative_";
+			else
+				filename += "risky_";
+			filename += String.valueOf(emergenciesRandomness)
 					+ "_" + String.valueOf(hospitalsMaxCapacity)
 					+ "_" + String.valueOf(hospitalsCapacityRandomness)
 					+ "_" + String.valueOf(lostEmergenciesRandomness)
