@@ -28,7 +28,7 @@ public class GUI extends JFrame {
 	static JButton run, reset, step;
 	static JLabel emergenciesQueue, emergenciesCompleted, lostEmergencies, hospitalsFull;
 	static JButton setSpeed, setEmergenciesRandomness, setBlueAmbulances, setYellowAmbulances, setRedAmbulances,
-					setHospitalsMaxCapacity, setHospitalsCapacityRandomness, setLostEmergenciesRandomness, ambulancesDecision;
+					setHospitalsMaxCapacity, setHospitalsCapacityRandomness, setLostEmergenciesRandomness, setAmbulanceDecision, setAmbulanceBehavior;
 	private int nX, nY;
 
 	public class Cell extends JPanel {
@@ -105,7 +105,8 @@ public class GUI extends JFrame {
 		add(lostEmergenciesPanel());
 		add(hospitalsCapacityRandomnessPanel());
 		add(lostEmergenciesRandomness());
-		add(ambulanceDecisionBehavior());
+		add(ambulancesDecision());
+		add(ambulancesBehavior());
 
 
 
@@ -224,7 +225,7 @@ public class GUI extends JFrame {
 
 	private Component hospitalsMaxCapacityPanel() {
 		JPanel panel = new JPanel();
-		panel.setSize(new Dimension(225,50));
+		panel.setSize(new Dimension(275,50));
 		panel.setLocation(new Point(725,100));
 
 		JLabel label = new JLabel("Hospitals Max Capacity");
@@ -255,7 +256,7 @@ public class GUI extends JFrame {
 
 	private Component emergenciesRandomnessPanel() {
 		JPanel panel = new JPanel();
-		panel.setSize(new Dimension(225,50));
+		panel.setSize(new Dimension(300,50));
 		panel.setLocation(new Point(725,50));
 
 		JLabel label = new JLabel("Emergencies Randomness");
@@ -286,7 +287,7 @@ public class GUI extends JFrame {
 
 	private Component hospitalsCapacityRandomnessPanel() {
 		JPanel panel = new JPanel();
-		panel.setSize(new Dimension(225,50));
+		panel.setSize(new Dimension(325,50));
 		panel.setLocation(new Point(725,150));
 
 		JLabel label = new JLabel("Hospitals Capacity Randomness");
@@ -317,7 +318,7 @@ public class GUI extends JFrame {
 
 	private Component lostEmergenciesRandomness() {
 		JPanel panel = new JPanel();
-		panel.setSize(new Dimension(225,50));
+		panel.setSize(new Dimension(325,50));
 		panel.setLocation(new Point(725,200));
 
 		JLabel label = new JLabel("Lost Emergencies Randomness");
@@ -437,12 +438,48 @@ public class GUI extends JFrame {
 		return panel;
 	}
 
-	private Component ambulanceDecisionBehavior() {
+	private Component ambulancesDecision() {
 		JPanel panel = new JPanel();
 		panel.setSize(new Dimension(225,75));
 		panel.setLocation(new Point(725,450));
 
 		JLabel label = new JLabel("Ambulances Decision");
+		panel.add(label);
+
+		ButtonGroup group = new ButtonGroup();
+		JRadioButton centralizedDecision = new JRadioButton("Centralized");
+		panel.add(centralizedDecision);
+		group.add(centralizedDecision);
+		JRadioButton decentralized = new JRadioButton("Decentralized");
+		panel.add(decentralized);
+		group.add(decentralized);
+
+		setAmbulanceDecision = new JButton("Set");
+		panel.add(setAmbulanceDecision);
+
+		centralizedDecision.setSelected(true); // default behavior
+		Board.setAmbulancesDecision(Board.AmbulancesDecision.Centralized); // default behavior
+
+		setAmbulanceDecision.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (centralizedDecision.isSelected()){
+					Board.setAmbulancesDecision(Board.AmbulancesDecision.Centralized);
+				}
+				else if (decentralized.isSelected()){
+					Board.setAmbulancesDecision(Board.AmbulancesDecision.Decentralized);
+				}
+			}
+		});
+
+		return panel;
+	}
+
+	private Component ambulancesBehavior() {
+		JPanel panel = new JPanel();
+		panel.setSize(new Dimension(225,50));
+		panel.setLocation(new Point(725,550));
+
+		JLabel label = new JLabel("Ambulances Behavior");
 		panel.add(label);
 
 		ButtonGroup group = new ButtonGroup();
@@ -453,24 +490,26 @@ public class GUI extends JFrame {
 		panel.add(riskyDecision);
 		group.add(riskyDecision);
 
-		ambulancesDecision = new JButton("Set");
-		panel.add(ambulancesDecision);
+		setAmbulanceDecision = new JButton("Set");
+		panel.add(setAmbulanceDecision);
 
 		riskyDecision.setSelected(true); // default behavior
+		Board.setAmbulancesBehavior(Board.AmbulancesBehavior.Risky); // default behavior
 
-		ambulancesDecision.addActionListener(new ActionListener() {
+		setAmbulanceDecision.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (conservativeDecision.isSelected()){
-					Board.setConservativeAmbulancesBehavior(true);
+					Board.setAmbulancesBehavior(Board.AmbulancesBehavior.Conservative);
 				}
 				else if (riskyDecision.isSelected()){
-					Board.setConservativeAmbulancesBehavior(false);
+					Board.setAmbulancesBehavior(Board.AmbulancesBehavior.Risky);
 				}
 			}
 		});
 
 		return panel;
 	}
+
 
 	private Component emergenciesQueuePanel() {
 		emergenciesQueue = new JLabel("Emergencies in queue: 0");
