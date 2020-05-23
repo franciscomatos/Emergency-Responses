@@ -56,30 +56,57 @@ public class Station extends Entity implements Comparable<Station>{
     }
 
     public void removeBlueAmbulances(int ambulancesToRemove){
-        for(Ambulance ambulance : ambulances){
-            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.blue && ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0){
-                ambulances.remove(ambulance);
+        for (Iterator<Ambulance> iterator = ambulances.iterator(); iterator.hasNext();) {
+            Ambulance ambulance = iterator.next();
+            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.blue &&
+                    ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0){
+                iterator.remove();
                 ambulancesToRemove--;
             }
         }
+//        for(Ambulance ambulance : ambulances){
+//            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.blue && ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0){
+//                ambulances.remove(ambulance);
+//                ambulancesToRemove--;
+//            }
+//        }
     }
 
     public void removeRedAmbulances(int ambulancesToRemove){
-        for(Ambulance ambulance : ambulances){
-            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.red && ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0){
-                ambulances.remove(ambulance);
+        for (Iterator<Ambulance> iterator = ambulances.iterator(); iterator.hasNext(); ) {
+            Ambulance ambulance = iterator.next();
+            if (ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.red &&
+                    ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0) {
+                iterator.remove();
                 ambulancesToRemove--;
             }
         }
+
+//          for(Ambulance ambulance : ambulances){
+//            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.red && ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0){
+//                ambulances.remove(ambulance);
+//                ambulancesToRemove--;
+//            }
+//      }
     }
 
     public void removeYellowAmbulances(int ambulancesToRemove){
-        for(Ambulance ambulance : ambulances){
-            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.yellow && ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0){
-                ambulances.remove(ambulance);
+        for (Iterator<Ambulance> iterator = ambulances.iterator(); iterator.hasNext(); ) {
+            Ambulance ambulance = iterator.next();
+            if (ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.yellow &&
+                    ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0) {
+                iterator.remove();
                 ambulancesToRemove--;
             }
         }
+
+
+//        for(Ambulance ambulance : ambulances){
+//            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.yellow && ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0){
+//                ambulances.remove(ambulance);
+//                ambulancesToRemove--;
+//            }
+//        }
     }
 
     public int getMediumTimeToReachHospital(){

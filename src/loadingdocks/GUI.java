@@ -94,6 +94,10 @@ public class GUI extends JFrame {
 		add(blueAmbulancesPanel());
 		add(yellowAmbulancesPanel());
 		add(redAmbulancesPanel());
+
+		Board.initialize();
+		Board.associateGUI(this);
+
 		add(emergenciesQueuePanel());
 		add(emergenciesRandomnessPanel());
 		add(hospitalsMaxCapacityPanel());
@@ -103,8 +107,7 @@ public class GUI extends JFrame {
 		add(lostEmergenciesRandomness());
 		add(ambulanceDecisionBehavior());
 
-		Board.initialize();
-		Board.associateGUI(this);
+
 
 		add(hospitalsFullPanel());
 
@@ -238,6 +241,7 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
 					Board.setHospitalsMaxCapacity(Integer.parseInt(hospitalsMaxCapacity.getText()));
+					System.out.println("hospitals max capacity: " + Board.getHospitalsMaxCapacity());
 				}catch(Exception e){
 					JTextPane output = new JTextPane();
 					output.setText("Please insert an valid integer value in Hospitals Max Capacity\nValue inserted = "+hospitalsMaxCapacity.getText());
@@ -268,6 +272,7 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0){
 				try{
 					Board.setEmergenciesRandomness(Integer.parseInt(emergenciesRandomness.getText()));
+					System.out.println("emergencies randomness: " + Board.getEmergenciesRandomness());
 				}catch(Exception e){
 					JTextPane output=new JTextPane();
 					output.setText("Please insert an valid integer value in Emergencies Randomness\nValue inserted = "+emergenciesRandomness.getText());
@@ -289,7 +294,7 @@ public class GUI extends JFrame {
 		hospitalsCapacityRandomness = new JTextField("2");
 		hospitalsCapacityRandomness.setMargin(new Insets(5,5,5,5));
 		hospitalsCapacityRandomness.setColumns(5);
-		Board.setEmergenciesRandomness(Integer.parseInt(hospitalsCapacityRandomness.getText()));
+		Board.setHospitalsCapacityRandomness(Integer.parseInt(hospitalsCapacityRandomness.getText()));
 		panel.add(hospitalsCapacityRandomness);
 
 		setHospitalsCapacityRandomness = new JButton("Set");
@@ -298,9 +303,10 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0){
 				try{
 					Board.setHospitalsCapacityRandomness(Integer.parseInt(hospitalsCapacityRandomness.getText()));
+					System.out.println("hospitals capacity randomness: " + Board.getHospitalsCapacityRandomness());
 				}catch(Exception e){
 					JTextPane output=new JTextPane();
-					output.setText("Please insert an valid integer value in Hospitals Capacity Randomness\nValue inserted = "+emergenciesRandomness.getText());
+					output.setText("Please insert an valid integer value in Hospitals Capacity Randomness\nValue inserted = "+hospitalsCapacityRandomness.getText());
 					JOptionPane.showMessageDialog(null,output,"Error",JOptionPane.PLAIN_MESSAGE);
 				}
 			}
@@ -328,9 +334,10 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0){
 				try{
 					Board.setLostEmergenciesRandomness(Integer.parseInt(lostEmergenciesRandomness.getText()));
+					System.out.println("lost emergencies  randomness: " + Board.getLostEmergenciesRandomness());
 				}catch(Exception e){
 					JTextPane output=new JTextPane();
-					output.setText("Please insert an valid integer value in Lost Emergencies Randomness\nValue inserted = "+emergenciesRandomness.getText());
+					output.setText("Please insert an valid integer value in Lost Emergencies Randomness\nValue inserted = "+lostEmergenciesRandomness.getText());
 					JOptionPane.showMessageDialog(null,output,"Error",JOptionPane.PLAIN_MESSAGE);
 				}
 			}
@@ -359,6 +366,7 @@ public class GUI extends JFrame {
 				try{
 					Board.setBlueAmbulances(Integer.parseInt(blueAmbulances.getText()));
 				}catch(Exception e){
+					e.printStackTrace();
 					JTextPane output = new JTextPane();
 					output.setText("Please insert an valid integer value in Blue ambulances\nValue inserted = "+blueAmbulances.getText());
 					JOptionPane.showMessageDialog(null, output, "Error", JOptionPane.PLAIN_MESSAGE);

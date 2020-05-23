@@ -181,6 +181,7 @@ public class Board {
 	}
 
 	public static void setHospitalsCapacityRandomness(int randomness) {
+		hospitalsCapacityRandomness = randomness;
 		for (Hospital h: hospitals) h.setReleaseFactor(randomness);
 	}
 
@@ -192,6 +193,14 @@ public class Board {
 		return emergenciesRandomness;
 	}
 
+	public static int getLostEmergenciesRandomness() {
+		return lostEmergenciesRandomness;
+	}
+
+	public static int getHospitalsCapacityRandomness() {
+		return hospitalsCapacityRandomness;
+	}
+
 	public static void setEmergenciesRandomness(int emergenciesRandomness) {
 		Board.emergenciesRandomness = emergenciesRandomness;
 	}
@@ -201,25 +210,41 @@ public class Board {
 	}
 
 	public static void setBlueAmbulances(int blueAmbulances) {
-		if (blueAmbulances > Board.blueAmbulances){
-			Board.blueAmbulances = blueAmbulances;
-			if (stations != null){
-				for(Station station: stations){
-					ambulances.removeAll(station.getBlueAmbulances());
-					station.addBlueAmbulances(blueAmbulances);
-					ambulances.addAll(station.getBlueAmbulances());
-				}
+		Board.blueAmbulances = blueAmbulances;
+		if(stations != null) {
+			for (Station station : stations) {
+				// first we remove all the existing blue ambulances
+				ambulances.removeAll(station.getBlueAmbulances());
+				station.removeBlueAmbulances(station.getBlueAmbulances().size());
+
+				// then we add the new ones
+				station.addBlueAmbulances(blueAmbulances);
+				ambulances.addAll(station.getBlueAmbulances());
 			}
 		}
-		else if(blueAmbulances < Board.blueAmbulances){
-			Board.blueAmbulances = blueAmbulances;
-			if (stations != null){
-				for(Station station: stations){
-					ambulances.addAll(station.getBlueAmbulances());
-					station.removeBlueAmbulances(blueAmbulances);
-					ambulances.addAll(station.getBlueAmbulances());
-				}
-			}
+//		if (blueAmbulances > Board.blueAmbulances){
+//
+//			if (stations != null){
+//				for(Station station: stations){
+//					ambulances.removeAll(station.getBlueAmbulances());
+//					station.addBlueAmbulances(blueAmbulances);
+//					ambulances.addAll(station.getBlueAmbulances());
+//				}
+//			}
+//		}
+//		else if(blueAmbulances < Board.blueAmbulances){
+//			Board.blueAmbulances = blueAmbulances;
+//			if (stations != null){
+//				for(Station station: stations){
+//					ambulances.addAll(station.getBlueAmbulances());
+//					station.removeBlueAmbulances(blueAmbulances);
+//					ambulances.addAll(station.getBlueAmbulances());
+//				}
+//			}
+//		}
+		if(stations != null) {
+			System.out.println("blue ambulances in station: " + stations.get(0).getBlueAmbulances().size());
+			System.out.println("ambulances in board: " + ambulances.size());
 		}
 	}
 
@@ -228,25 +253,41 @@ public class Board {
 	}
 
 	public static void setYellowAmbulances(int yellowAmbulances) {
-		if (yellowAmbulances > Board.yellowAmbulances){
-			Board.yellowAmbulances = yellowAmbulances;
-			if (stations != null){
-				for(Station station: stations){
-					ambulances.removeAll(station.getYellowAmbulances());
-					station.addYellowAmbulances(yellowAmbulances);
-					ambulances.addAll(station.getYellowAmbulances());
-				}
+		Board.yellowAmbulances = yellowAmbulances;
+		if(stations != null) {
+			for (Station station : stations) {
+				// first we remove all the existing blue ambulances
+				ambulances.removeAll(station.getYellowAmbulances());
+				station.removeYellowAmbulances(station.getYellowAmbulances().size());
+
+				// then we add the new ones
+				station.addYellowAmbulances(yellowAmbulances);
+				ambulances.addAll(station.getYellowAmbulances());
 			}
 		}
-		else if (yellowAmbulances < Board.yellowAmbulances){
-			Board.yellowAmbulances = yellowAmbulances;
-			if (stations != null){
-				for(Station station: stations){
-					ambulances.removeAll(station.getYellowAmbulances());
-					station.removeYellowAmbulances(yellowAmbulances);
-					ambulances.addAll(station.getYellowAmbulances());
-				}
-			}
+//		if (yellowAmbulances > Board.yellowAmbulances){
+//			Board.yellowAmbulances = yellowAmbulances;
+//			if (stations != null){
+//				for(Station station: stations){
+//					ambulances.removeAll(station.getYellowAmbulances());
+//					station.addYellowAmbulances(yellowAmbulances);
+//					ambulances.addAll(station.getYellowAmbulances());
+//				}
+//			}
+//		}
+//		else if (yellowAmbulances < Board.yellowAmbulances){
+//			Board.yellowAmbulances = yellowAmbulances;
+//			if (stations != null){
+//				for(Station station: stations){
+//					ambulances.removeAll(station.getYellowAmbulances());
+//					station.removeYellowAmbulances(yellowAmbulances);
+//					ambulances.addAll(station.getYellowAmbulances());
+//				}
+//			}
+//		}
+		if(stations != null) {
+			System.out.println("yellow ambulances in station: " + stations.get(0).getYellowAmbulances().size());
+			System.out.println("ambulances in board: " + ambulances.size());
 		}
 	}
 
@@ -255,25 +296,41 @@ public class Board {
 	}
 
 	public static void setRedAmbulances(int redAmbulances) {
-		if (redAmbulances > Board.redAmbulances){
-			Board.redAmbulances = redAmbulances;
-			if (stations != null){
-				for(Station station: stations){
-					ambulances.removeAll(station.getRedAmbulances());
-					station.addRedAmbulances(redAmbulances);
-					ambulances.addAll(station.getRedAmbulances());
-				}
+		Board.redAmbulances = redAmbulances;
+		if(stations != null) {
+			for (Station station : stations) {
+				// first we remove all the existing blue ambulances
+				ambulances.removeAll(station.getRedAmbulances());
+				station.removeRedAmbulances(station.getRedAmbulances().size());
+
+				// then we add the new ones
+				station.addRedAmbulances(redAmbulances);
+				ambulances.addAll(station.getRedAmbulances());
 			}
 		}
-		else if (redAmbulances < Board.redAmbulances){
-			Board.redAmbulances = redAmbulances;
-			if (stations != null){
-				for(Station station: stations){
-					ambulances.removeAll(station.getRedAmbulances());
-					station.removeRedAmbulances(redAmbulances);
-					ambulances.addAll(station.getRedAmbulances());
-				}
-			}
+//		if (redAmbulances > Board.redAmbulances){
+//			Board.redAmbulances = redAmbulances;
+//			if (stations != null){
+//				for(Station station: stations){
+//					ambulances.removeAll(station.getRedAmbulances());
+//					station.addRedAmbulances(redAmbulances);
+//					ambulances.addAll(station.getRedAmbulances());
+//				}
+//			}
+//		}
+//		else if (redAmbulances < Board.redAmbulances){
+//			Board.redAmbulances = redAmbulances;
+//			if (stations != null){
+//				for(Station station: stations){
+//					ambulances.removeAll(station.getRedAmbulances());
+//					station.removeRedAmbulances(redAmbulances);
+//					ambulances.addAll(station.getRedAmbulances());
+//				}
+//			}
+//		}
+		if(stations != null) {
+			System.out.println("red ambulances in station: " + stations.get(0).getRedAmbulances().size());
+			System.out.println("ambulances in board: " + ambulances.size());
 		}
 	}
 
@@ -460,13 +517,14 @@ public class Board {
 
 	public static void logData() {
 		try {
-			String filename = String.valueOf(emergenciesRandomness)
-					+ "_" + String.valueOf(hospitalsMaxCapacity)
-					+ "_" + String.valueOf(hospitalsCapacityRandomness)
-					+ "_" + String.valueOf(lostEmergenciesRandomness)
-					+ "_" + String.valueOf(blueAmbulances)
-					+ "_" + String.valueOf(yellowAmbulances)
-					+ "_" + String.valueOf(redAmbulances)
+			String filename = "c_r_"+
+					emergenciesRandomness
+					+ "_" + hospitalsMaxCapacity
+					+ "_" + hospitalsCapacityRandomness
+					+ "_" + lostEmergenciesRandomness
+					+ "_" + blueAmbulances
+					+ "_" + yellowAmbulances
+					+ "_" + redAmbulances
 					+ ".csv";
 			csvWriter = new FileWriter(LOGSDIRECTORY + "/" + filename, true);
 			csvWriter.append("Number of Full Hospitals");
