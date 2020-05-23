@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class Emergency extends Entity {
 
-    public enum EmergencyGravity {Low, Medium, High};
+    public enum EmergencyGravity {Low, Medium, High}
     public EmergencyGravity gravity;
     private int stepsToLose;
 

@@ -2,6 +2,7 @@ package loadingdocks;
 
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Central {
 
@@ -42,6 +43,76 @@ public class Central {
     }
 
     public List<Emergency> getEmergencies() { return this.emergencies; }
+
+    public void sendEmergenciesToAmbulances(){
+        if(emergencies.isEmpty()) {
+            System.out.println("no current emergencies to handle");
+            return;
+        }
+
+        System.out.println("Going to send ambulances using behavior :" + Board.getAmbulancesBehavior());
+        sendEmergenciesToAmbulancesInternal(Emergency.EmergencyGravity.Low);
+        sendEmergenciesToAmbulancesInternal(Emergency.EmergencyGravity.Medium);
+        sendEmergenciesToAmbulancesInternal(Emergency.EmergencyGravity.High);
+
+    }
+
+    private void sendEmergenciesToAmbulancesInternal(Emergency.EmergencyGravity gravity){
+        System.out.println("Going to send emergencies of type " + gravity + " to ambulances.");
+        // does it make a difference emergencies.get(0).EmergencyGravity to select the order in which the ambulances are selected ??
+        List<Emergency> emergenciesToHandle = getAvailableEmergenciesPerGravity(emergencies, gravity);
+        List<Ambulance> availableAmbulances = getAvailableAmbulancesPerGravity(gravity);
+
+        if (emergenciesToHandle.isEmpty() || availableAmbulances.isEmpty()){
+            System.out.println("There are no emergencies of type " + gravity + " to send to ambulances.");
+            return;
+        }
+        if (emergenciesToHandle.size() >= availableAmbulances.size()){
+            System.out.println("There are more emergencies of type " + gravity + " than available ambulances.");
+            emergenciesToHandle = emergenciesToHandle.subList(0, availableAmbulances.size());
+        }
+
+        for(Ambulance a : availableAmbulances){
+            a.calculateDistanceToEmergencies(emergenciesToHandle);
+            a.minDistanceToEmergency();
+        }
+
+        for(Ambulance a : availableAmbulances){
+            a.handleConflicts(availableAmbulances);
+        }
+    }
+
+    public List<Ambulance> getAvailableAmbulancesPerGravity(Emergency.EmergencyGravity gravity){
+        // if low emergency, any ambulance can do it
+        if (gravity == Emergency.EmergencyGravity.Low){
+            List<Ambulance> ambulances = Board.getBlueAmbulancesAvailable();
+            if (Board.getAmbulancesBehavior() == Board.AmbulancesBehavior.Risky){
+                ambulances.addAll(Board.getYellowAmbulancesAvailable());
+                ambulances.addAll(Board.getRedAmbulancesAvailable());
+            }
+            return ambulances;
+        }
+        // if medium, only yellow and red
+        else if (gravity == Emergency.EmergencyGravity.Medium){
+            List<Ambulance> ambulances = Board.getYellowAmbulancesAvailable();
+            if (Board.getAmbulancesBehavior() == Board.AmbulancesBehavior.Risky){
+                ambulances.addAll(Board.getRedAmbulancesAvailable());
+            }
+            return ambulances;
+        }
+        // if high, only red
+        else return Board.getRedAmbulancesAvailable();
+    }
+
+    public List<Emergency> getAvailableEmergenciesPerGravity(List<Emergency> emergencies, Emergency.EmergencyGravity gravity){
+        List<Emergency> emergenciesList = new ArrayList<>();
+        for (Emergency emergency : emergencies){
+            if (emergency.gravity == gravity){
+                emergenciesList.add(emergency);
+            }
+        }
+        return emergenciesList;
+    }
 
     public void selectNearestStation() {
         if(emergencies.isEmpty()) {
