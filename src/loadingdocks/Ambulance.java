@@ -1,10 +1,9 @@
 package loadingdocks;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Ambulance extends Entity implements Comparable<Ambulance>{
 
@@ -16,7 +15,7 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
 
         public final int label;
 
-        private AmbulanceType(int label) {
+        AmbulanceType(int label) {
             this.label = label;
         }
     }
@@ -34,6 +33,14 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
     public int stepsLeftToMove;
 
     private Patient currentPatient = null;
+
+    //private ConcurrentHashMap<Ambulance, List<EmergencyDistances>> allAmbulancesDistances;
+
+    //private ConcurrentHashMap<Ambulance, Emergency> allMinEmergenciesAmbulances;
+
+    private List<EmergencyDistances> distancesToEmergencies;
+
+    public Emergency minEmergency;
 
     private static Random rand = new Random();
 
@@ -78,6 +85,118 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
             move();
             stepsLeftToMove = Board.stepsPerCell(this.point.x, this.point.y);
         }
+    }
+
+    public List<EmergencyDistances> getDistancesToEmergencies() {
+        return distancesToEmergencies;
+    }
+
+    public void setDistancesToEmergencies(List<EmergencyDistances> distancesToEmergencies) {
+        this.distancesToEmergencies = distancesToEmergencies;
+    }
+
+    public Emergency getMinEmergency() {
+        return minEmergency;
+    }
+
+    public void setMinEmergency(Emergency minEmergency) {
+        this.minEmergency = minEmergency;
+    }
+
+
+    public void minDistanceToEmergency(){
+        if (getDistancesToEmergencies() != null && !getDistancesToEmergencies().isEmpty()){
+            EmergencyDistances minEmergency = Collections.min(getDistancesToEmergencies());
+            this.minEmergency = minEmergency.getEmergency();
+        }
+        else{
+            this.minEmergency = null;
+        }
+    }
+
+    public void handleConflicts(List<Ambulance> availableAmbulances){
+        boolean foundOtherMin = false;
+        if (this.minEmergency == null){
+            return;
+        }
+        for(Ambulance ambulance : availableAmbulances){
+            if (ambulance == this || ambulance.getMinEmergency() == null){
+                continue;
+            }
+            if (ambulance.getMinEmergency().point.x == this.minEmergency.point.x &&
+                    ambulance.getMinEmergency().point.y == this.minEmergency.point.y &&
+                    this.getDistancesToEmergencies() != null &&
+                    ambulance.getDistancesToEmergencies() != null &&
+                    !this.getDistancesToEmergencies().isEmpty() &&
+                    !ambulance.getDistancesToEmergencies().isEmpty()){
+                EmergencyDistances ownMin = Collections.min(this.getDistancesToEmergencies());
+                EmergencyDistances otherMin = Collections.min(ambulance.getDistancesToEmergencies());
+                if (otherMin.getAmbulanceDistance() < ownMin.getAmbulanceDistance()){
+                    this.getDistancesToEmergencies().remove(ownMin);
+                    if (!this.getDistancesToEmergencies().isEmpty()){
+                        minDistanceToEmergency();
+                    }
+                    foundOtherMin = true;
+                    break;
+                }
+            }
+        }
+
+        if (!foundOtherMin && this.minEmergency != null){
+            Hospital bestHospital = calculateHospital(Board.getHospitals(), this.minEmergency);
+            if (bestHospital != null){
+                for(Ambulance a : availableAmbulances){
+                    if (a == this){
+                        continue;
+                    }
+                    List<EmergencyDistances> newList = new ArrayList<>();
+                    for (EmergencyDistances emergencyDistances : a.getDistancesToEmergencies()){
+                        if (emergencyDistances.getEmergency() != null &&
+                                minEmergency != null &&
+                                emergencyDistances.getEmergency().point.x != minEmergency.point.x &&
+                                emergencyDistances.getEmergency().point.y != minEmergency.point.y){
+                            newList.add(emergencyDistances);
+                        }
+                    }
+                    a.setDistancesToEmergencies(newList);
+                    a.minDistanceToEmergency();
+                }
+
+                System.out.println("Ambulance at: {" + this.point.x + ", " + this.point.y + "} is going to rescue patient.");
+                Patient patient = new Patient(bestHospital.getReleaseFactor(), false);
+                bestHospital.addPatient(patient);
+                rescue(minEmergency, bestHospital, patient);
+                Board.getCentral().removeEmergency(minEmergency);
+            }
+            else{
+                //TODO
+            }
+        }
+    }
+
+
+    public void calculateDistanceToEmergencies(List<Emergency> emergencies){
+        System.out.println("Ambulance at: {" + this.point.x + ", " + this.point.y +  "} going to calculate distance to all available emergencies.");
+        List<EmergencyDistances> emergencyDistancesList = new ArrayList<>();
+        for(Emergency e : emergencies){
+            emergencyDistancesList.add(new EmergencyDistances(e, getDistanceToEmergency(e)));
+        }
+        this.setDistancesToEmergencies(emergencyDistancesList);
+    }
+
+    public Hospital calculateHospital(List<Hospital> hospitals, Emergency emergency){
+        Hospital bestHospital = null;
+        int minDistance = Integer.MAX_VALUE;
+        for (Hospital hospital : hospitals){
+            if (hospital.canReceivePatient()) {
+                int tmpDistance = manhattanDistance(hospital.point, emergency.point);
+                if (tmpDistance < minDistance){
+                    minDistance = tmpDistance;
+                    bestHospital = hospital;
+                }
+            }
+        }
+        return bestHospital;
     }
 
     public void move() {
@@ -153,15 +272,9 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
         if (entity == null){ // || entity instanceof Emergency
             return true;
         }
-        else if (isAtHospital(new Point(nextX, nextY)) ||
+        else return isAtHospital(new Point(nextX, nextY)) ||
                 isAtEmergency(new Point(nextX, nextY)) ||
-                isAtStation(new Point(nextX, nextY)))
-        {
-            return true;
-        }
-        else{
-            return false;
-        }
+                isAtStation(new Point(nextX, nextY));
     }
 
     public boolean isAtStation(Point point){
@@ -204,6 +317,10 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
             else if (signX < 0)
                 this.direction = AmbulanceDirection.SO;
         }
+    }
+
+    public Integer manhattanDistance(Point a, Point b) {
+        return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
 
     public void setAvailable(boolean available) {
@@ -250,6 +367,14 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
 
     public void setAmbulanceType(AmbulanceType ambulanceType) {
         this.ambulanceType = ambulanceType;
+    }
+
+    public int getDistanceToEmergency(Emergency emergency) {
+        if (point == null || emergency == null) {
+            return 0;
+        }
+
+        return manhattanDistance(point, emergency.point);
     }
 
     @Override
