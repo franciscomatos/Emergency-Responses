@@ -517,14 +517,19 @@ public class Board {
 
 	public static void logData() {
 		try {
-			String filename = "c_r_"+
-					emergenciesRandomness
-					+ "_" + hospitalsMaxCapacity
-					+ "_" + hospitalsCapacityRandomness
-					+ "_" + lostEmergenciesRandomness
-					+ "_" + blueAmbulances
-					+ "_" + yellowAmbulances
-					+ "_" + redAmbulances
+
+			String filename = "c_";
+			if (conservativeAmbulancesBehavior)
+				filename += "c_";
+			else
+				filename += "r_";
+			filename += String.valueOf(emergenciesRandomness)
+					+ "_" + String.valueOf(hospitalsMaxCapacity)
+					+ "_" + String.valueOf(hospitalsCapacityRandomness)
+					+ "_" + String.valueOf(lostEmergenciesRandomness)
+					+ "_" + String.valueOf(blueAmbulances)
+					+ "_" + String.valueOf(yellowAmbulances)
+					+ "_" + String.valueOf(redAmbulances)
 					+ ".csv";
 			csvWriter = new FileWriter(LOGSDIRECTORY + "/" + filename, true);
 			csvWriter.append("Number of Full Hospitals");
