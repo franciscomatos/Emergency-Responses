@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d6f3daf1-2bbd-4c10-8f63-9743d0e483dd" name="Default Changelist" comment="Add decentralized behavior">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-<<<<<<< HEAD
-=======
       <change beforePath="$PROJECT_DIR$/src/loadingdocks/Ambulance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Ambulance.java" afterDir="false" />
->>>>>>> 29a5b5a0ee63af91fdb653e6dd66a649b04e4058
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
