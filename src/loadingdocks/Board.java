@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,8 +20,10 @@ import loadingdocks.Block.Shape;
 public class Board {
 
 	/** The environment */
-	
+
 	public static int nX = 30, nY = 30;
+
+	private static Central central;
 	private static Block[][] board;
 	private static Entity[][] objects;
 	private static Entity[][] blueAmbulancesObjects;
@@ -28,54 +31,54 @@ public class Board {
 	private static Entity[][] yellowAmbulancesObjects;
 
 	private static List<Station> stations;
-
 	private static List<Hospital> hospitals;
 	private static List<Ambulance> ambulances;
-
 	private static List<Emergency> emergencies;
-	private static Central central;
-
-	private static Random rand = new Random();
 
 	private static int blueAmbulances;
 	private static int yellowAmbulances;
 	private static int redAmbulances;
 	private static int emergenciesRandomness;
 	private static int hospitalsMaxCapacity;
-    private static boolean conservativeAmbulancesBehavior;
+
+	public enum AmbulancesDecision {Centralized, Decentralized}
+	public enum AmbulancesBehavior {Conservative, Risky}
+
+    private static AmbulancesDecision ambulancesDecision;
+
+	private static AmbulancesBehavior ambulancesBehavior;
 
 	private static int hospitalsCapacityRandomness = 10;
 	private static int lostEmergenciesRandomness = 10;
-
 	private static int lostEmergencies = 0;
-
 	private static int stepCounter = 1;
 
 	private static FileWriter csvWriter;
     private static String CURRENTDIRECTORY = System.getProperty("user.dir");
     private static File LOGSDIRECTORY = new File(CURRENTDIRECTORY, "logs");
-	
-	
+	private static Random rand = new Random();
+
+
 	/****************************
 	 ***** A: SETTING BOARD *****
 	 ****************************/
-	
+
 	public static void initialize() {
 
 		/**
 		* Create stations
 		* */
 		stations = new ArrayList<>();
-		stations.add(new Station(new Point(1, 3), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		stations.add(new Station(new Point(7, 4), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		stations.add(new Station(new Point(7, 15), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		stations.add(new Station(new Point(19, 4), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		stations.add(new Station(new Point(18, 8), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		stations.add(new Station(new Point(22, 6), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		stations.add(new Station(new Point(20, 11), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		stations.add(new Station(new Point(20, 17), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		stations.add(new Station(new Point(26, 17), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
-		stations.add(new Station(new Point(28, 16), Color.BLUE, blueAmbulances, yellowAmbulances, redAmbulances));
+		stations.add(new Station(new Point(1, 3), new Color(18, 185, 18), blueAmbulances, yellowAmbulances, redAmbulances));
+		stations.add(new Station(new Point(7, 4), new Color(18, 185, 18), blueAmbulances, yellowAmbulances, redAmbulances));
+		stations.add(new Station(new Point(7, 15), new Color(18, 185, 18), blueAmbulances, yellowAmbulances, redAmbulances));
+		stations.add(new Station(new Point(19, 4), new Color(18, 185, 18), blueAmbulances, yellowAmbulances, redAmbulances));
+		stations.add(new Station(new Point(18, 8), new Color(18, 185, 18), blueAmbulances, yellowAmbulances, redAmbulances));
+		stations.add(new Station(new Point(22, 6), new Color(18, 185, 18), blueAmbulances, yellowAmbulances, redAmbulances));
+		stations.add(new Station(new Point(20, 11), new Color(18, 185, 18), blueAmbulances, yellowAmbulances, redAmbulances));
+		stations.add(new Station(new Point(20, 17), new Color(18, 185, 18), blueAmbulances, yellowAmbulances, redAmbulances));
+		stations.add(new Station(new Point(26, 17), new Color(18, 185, 18), blueAmbulances, yellowAmbulances, redAmbulances));
+		stations.add(new Station(new Point(28, 16), new Color(18, 185, 18), blueAmbulances, yellowAmbulances, redAmbulances));
 		/**
 		 * Create Hospitals
 		 * */
@@ -158,10 +161,52 @@ public class Board {
             LOGSDIRECTORY.mkdir();
 		}
 	}
-	
+
 	/****************************
 	 ***** B: BOARD METHODS *****
 	 ****************************/
+
+	public static AmbulancesBehavior getAmbulancesBehavior() {
+		return ambulancesBehavior;
+	}
+
+	public static void setAmbulancesBehavior(AmbulancesBehavior ambulancesBehavior) {
+		Board.ambulancesBehavior = ambulancesBehavior;
+	}
+
+	public static Central getCentral() {
+		return central;
+	}
+
+	public static List<Ambulance> getBlueAmbulancesAvailable() {
+		List<Ambulance> _ambulances = new ArrayList<>();
+		for (Ambulance ambulance: ambulances){
+			if (ambulance.ambulanceType == Ambulance.AmbulanceType.blue && ambulance.available){
+				_ambulances.add(ambulance);
+			}
+		}
+		return _ambulances;
+	}
+
+	public static List<Ambulance> getYellowAmbulancesAvailable() {
+		List<Ambulance> _ambulances = new ArrayList<>();
+		for (Ambulance ambulance: ambulances){
+			if (ambulance.ambulanceType == Ambulance.AmbulanceType.yellow  && ambulance.available){
+				_ambulances.add(ambulance);
+			}
+		}
+		return _ambulances;
+	}
+
+	public static List<Ambulance> getRedAmbulancesAvailable() {
+		List<Ambulance> _ambulances = new ArrayList<>();
+		for (Ambulance ambulance: ambulances){
+			if (ambulance.ambulanceType == Ambulance.AmbulanceType.red && ambulance.available){
+				_ambulances.add(ambulance);
+			}
+		}
+		return _ambulances;
+	}
 
 	public static int getLostEmergencies() {
 		return Board.lostEmergencies;
@@ -334,10 +379,31 @@ public class Board {
 		}
 	}
 
+	public static List<Ambulance> getAvailableAmbulances(){
+		List<Ambulance> availableAmbulances = new ArrayList<>();
+		for (Ambulance a: ambulances) {
+			if (a.available) {
+				availableAmbulances.add(a);
+			}
+		}
+		return availableAmbulances;
+	}
+
+	public static List<Hospital> getAvailableHospitals(){
+		List<Hospital> availableHospitals = new ArrayList<>();
+		for (Hospital h: hospitals) {
+			if (h.canReceivePatient()) {
+				availableHospitals.add(h);
+			}
+		}
+
+		return availableHospitals;
+	}
+
 	public static int getEmergenciesInQueue(){
 		return central.getEmergenciesInQueue();
 	}
-	
+
 	public static Entity getEntity(Point point) {
         return objects[point.x][point.y];
 	}
@@ -439,18 +505,18 @@ public class Board {
 		return emergenciesCompleted;
 	}
 
-    public static boolean getConservativeAmbulancesBehavior() {
-        return conservativeAmbulancesBehavior;
+    public static AmbulancesDecision getAmbulancesDecision() {
+        return ambulancesDecision;
     }
 
-    public static void setConservativeAmbulancesBehavior(boolean conservativeAmbulancesBehavior) {
-        Board.conservativeAmbulancesBehavior = conservativeAmbulancesBehavior;
+    public static void setAmbulancesDecision(AmbulancesDecision decision) {
+        Board.ambulancesDecision = decision;
     }
 
 	/***********************************
 	 ***** C: ELICIT AGENT ACTIONS *****
 	 ***********************************/
-	
+
 	private static RunThread runThread;
 	private static GUI GUI;
 
@@ -465,7 +531,7 @@ public class Board {
 		public RunThread(int time){
 			Board.time = time*time;
 		}
-		
+
 	    public void run() {
 
 	    	while(true){
@@ -481,7 +547,7 @@ public class Board {
 
 	    }
 	}
-	
+
 	public static void run(int time) {
 		Board.runThread = new RunThread(time);
 		Board.runThread.start();
@@ -500,10 +566,18 @@ public class Board {
 
 	public static void step() {
 		//removeObjects();
+		displayObjects();
+		if (getAmbulancesDecision() == AmbulancesDecision.Decentralized){
+			System.out.println("Decentralized decision");
+		    central.sendEmergenciesToAmbulances();
+        }
+		else{
+			System.out.println("Centralized decision");
+            central.selectNearestStation();
+        }
 		for (Ambulance ambulance : ambulances) {
 			ambulance.decide();
 		}
-		displayObjects();
 		GUI.update();
 
 		if(stepCounter % 1000 == 0)
@@ -517,19 +591,22 @@ public class Board {
 
 	public static void logData() {
 		try {
-
-			String filename = "c_";
-			if (conservativeAmbulancesBehavior)
-				filename += "c_";
+			String filename = "";
+			if (ambulancesDecision == AmbulancesDecision.Centralized)
+				filename += "centralized_";
 			else
-				filename += "r_";
-			filename += String.valueOf(emergenciesRandomness)
-					+ "_" + String.valueOf(hospitalsMaxCapacity)
-					+ "_" + String.valueOf(hospitalsCapacityRandomness)
-					+ "_" + String.valueOf(lostEmergenciesRandomness)
-					+ "_" + String.valueOf(blueAmbulances)
-					+ "_" + String.valueOf(yellowAmbulances)
-					+ "_" + String.valueOf(redAmbulances)
+				filename += "decentralized_";
+			if (ambulancesBehavior == AmbulancesBehavior.Conservative)
+				filename += "conservative_";
+			else
+				filename += "risky_";
+			filename += emergenciesRandomness
+					+ "_" + hospitalsMaxCapacity
+					+ "_" + hospitalsCapacityRandomness
+					+ "_" + lostEmergenciesRandomness
+					+ "_" + blueAmbulances
+					+ "_" + yellowAmbulances
+					+ "_" + redAmbulances
 					+ ".csv";
 			csvWriter = new FileWriter(LOGSDIRECTORY + "/" + filename, true);
 			csvWriter.append("Number of Full Hospitals");
@@ -576,7 +653,7 @@ public class Board {
 		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
 		for(Station station : stations) GUI.displayObject(station);
 		for(Hospital hospital : hospitals) GUI.displayObject(hospital);
-		for (Ambulance ambulance : ambulances) GUI.displayObject(ambulance);
+		//for (Ambulance ambulance : ambulances) GUI.displayObject(ambulance);
 
 		for(Hospital hospital: getHospitals()) hospital.updatePatients();
 
@@ -592,15 +669,6 @@ public class Board {
 				lostEmergencies++;
 			}
 		}
-
-		// emergency was lost
-//		if (central.getEmergenciesInQueue() % lostEmergenciesRandomness == 0){
-//			Emergency e = central.removeEmergencyFromQueue();
-//			if (e != null){
-//				removeEmergency(e);
-//				lostEmergencies++;
-//			}
-//		}
 
 		// creating new emergency
 		if (stepCounter % emergenciesRandomness == 0){
@@ -622,17 +690,16 @@ public class Board {
 				// central receives the emergency request and selects nearest station
 				central.addEmergencyToQueue(emergency);
 				GUI.displayObject(emergency);
-				GUI.displayBoard();
+				//GUI.displayBoard();
 			}
 		}
-		central.selectNearestStation();
 	}
-	
+
 	public static void removeObjects(){
 		for(Emergency emergency: emergencies) GUI.removeObject(emergency);
 		for(Ambulance ambulance: ambulances) GUI.removeObject(ambulance);
 	}
-	
+
 	public static void associateGUI(GUI graphicalInterface) {
 		GUI = graphicalInterface;
 	}

@@ -6,9 +6,7 @@ import java.util.List;
 
 public class Station extends Entity implements Comparable<Station>{
 
-    public enum Action { SelectAmbulance, SendAmbulance, RefuseRequest}
-
-    public HashMap<Ambulance, Emergency> emergencyRequests = new HashMap<Ambulance, Emergency>();
+    public HashMap<Ambulance, Emergency> emergencyRequests = new HashMap<>();
 
     public List<Ambulance> ambulances = new ArrayList<>();
 
@@ -109,6 +107,14 @@ public class Station extends Entity implements Comparable<Station>{
 //        }
     }
 
+    public int getEmergenciesCompleted() {
+        return emergenciesCompleted;
+    }
+
+    public void setEmergenciesCompleted(int emergenciesCompleted) {
+        this.emergenciesCompleted = emergenciesCompleted;
+    }
+
     public int getMediumTimeToReachHospital(){
         int timeToReachHospital = 0;
         for(Ambulance ambulance : ambulances){
@@ -141,10 +147,7 @@ public class Station extends Entity implements Comparable<Station>{
             return ambulances;
         }
         // if high, only red
-        else{
-            List<Ambulance> ambulances = getRedAmbulances();
-            return ambulances;
-        }
+        else return getRedAmbulances();
     }
 
     public List<Ambulance> getBlueAmbulances() {
@@ -177,7 +180,6 @@ public class Station extends Entity implements Comparable<Station>{
         return _ambulances;
     }
 
-
     public void startEmergencyRequest(Ambulance _ambulance, Emergency emergency){
         emergencyRequests.put(_ambulance, emergency);
     }
@@ -185,21 +187,6 @@ public class Station extends Entity implements Comparable<Station>{
     public void finishEmergencyRequest(Ambulance _ambulance){
         emergencyRequests.remove(_ambulance);
         emergenciesCompleted++;
-    }
-
-    public void stationDecision(){
-        if (availableAmbulances() > 0){
-            // do something
-        }
-        else{
-            refuseRequest();
-        }
-    }
-
-    public void stationPerception(){
-        if (availableAmbulances() > 0){
-            stationDecision();
-        }
     }
 
     /**
@@ -219,11 +206,6 @@ public class Station extends Entity implements Comparable<Station>{
      *
      * Actuators
      */
-
-    public void refuseRequest(){
-        // send boolean to central so that the central knows the request was refused.
-        // central.stationRefusedRequest(this);
-    }
 
     public void setCentral(Central central) {
         this.central = central;
@@ -265,32 +247,30 @@ public class Station extends Entity implements Comparable<Station>{
         closestAmbulance = null;
         Emergency e = central.getCurrentEmergency();
 
-        if (Board.getConservativeAmbulancesBehavior()){
+        if (Board.getAmbulancesBehavior() == Board.AmbulancesBehavior.Conservative){
             //System.out.println("conservativeDecision selected.");
             for(Ambulance ambulance: getAmbulances(e.gravity)) {
                 if(ambulance.available) {
                     Integer currentDistance = manhattanDistance(ambulance.point, e.point);
-                    if (currentDistance <= minimumDistance) {
+                    if (currentDistance < minimumDistance) {
                         minimumDistance = currentDistance;
                         closestAmbulance = ambulance;
                     }
                 }
             }
         }
-        else{
+        else if (Board.getAmbulancesBehavior() == Board.AmbulancesBehavior.Risky){
             //System.out.println("risky selected.");
             for (Ambulance ambulance : getClosestGravityAmbulances(e.gravity)) {
-                System.out.println(ambulance.color);
                 if (ambulance.available) {
                     Integer currentDistance = manhattanDistance(ambulance.point, e.point);
-                    if (currentDistance <= minimumDistance) {
+                    if (currentDistance < minimumDistance) {
                         minimumDistance = currentDistance;
                         closestAmbulance = ambulance;
                     }
                 }
             }
         }
-
 //        for (Ambulance ambulance : getAmbulances()) {
 //            if (ambulance.available) {
 //                Integer currentDistance = manhattanDistance(ambulance.point, central.getCurrentEmergency().point);
@@ -310,13 +290,5 @@ public class Station extends Entity implements Comparable<Station>{
         }
 
         return minimumAmbulanceDistance().compareTo(s.minimumAmbulanceDistance());
-    }
-
-    public int getEmergenciesCompleted() {
-        return emergenciesCompleted;
-    }
-
-    public void setEmergenciesCompleted(int emergenciesCompleted) {
-        this.emergenciesCompleted = emergenciesCompleted;
     }
 }
