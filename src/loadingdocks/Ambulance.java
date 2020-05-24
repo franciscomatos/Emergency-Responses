@@ -257,6 +257,10 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
         if (nextY == -1) {
             nextY = 0;
         }
+        
+        dX = dest.x - nextX;
+        dY = dest.y - nextY;
+
         updateDirection(dX, dY, nextX, nextY);
         return new Point(nextX, nextY);
     }
