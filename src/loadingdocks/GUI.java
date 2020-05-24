@@ -476,7 +476,7 @@ public class GUI extends JFrame {
 
 	private Component ambulancesBehavior() {
 		JPanel panel = new JPanel();
-		panel.setSize(new Dimension(225,50));
+		panel.setSize(new Dimension(225,75));
 		panel.setLocation(new Point(725,550));
 
 		JLabel label = new JLabel("Ambulances Behavior");

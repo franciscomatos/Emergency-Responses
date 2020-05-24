@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6f3daf1-2bbd-4c10-8f63-9743d0e483dd" name="Default Changelist" comment="Add decentralized behavior">
-      <change afterPath="$PROJECT_DIR$/src/loadingdocks/EmergencyDistances.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/Agent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/Ambulance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Ambulance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/Central.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Central.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/Emergency.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Emergency.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/GUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loadingdocks/Station.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/loadingdocks/Station.java" afterDir="false" />
-    </list>
+    <list default="true" id="d6f3daf1-2bbd-4c10-8f63-9743d0e483dd" name="Default Changelist" comment="Add decentralized behavior" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

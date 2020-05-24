@@ -593,13 +593,13 @@ public class Board {
 		try {
 			String filename = "";
 			if (ambulancesDecision == AmbulancesDecision.Centralized)
-				filename += "centralized_";
+				filename += "c_";
 			else
-				filename += "decentralized_";
+				filename += "d_";
 			if (ambulancesBehavior == AmbulancesBehavior.Conservative)
-				filename += "conservative_";
+				filename += "c_";
 			else
-				filename += "risky_";
+				filename += "r_";
 			filename += emergenciesRandomness
 					+ "_" + hospitalsMaxCapacity
 					+ "_" + hospitalsCapacityRandomness
