@@ -44,7 +44,7 @@ public class Board {
 
 	private static AmbulancesBehavior ambulancesBehavior;
 
-	private static int hospitalsCapacityRandomness = 10;
+	private static int patientReleaseFactor = 10;
 	private static int lostEmergenciesRandomness = 10;
 	private static int lostEmergencies = 0;
 	private static int stepCounter = 1;
@@ -220,9 +220,9 @@ public class Board {
 		}
 	}
 
-	public static void setHospitalsCapacityRandomness(int randomness) {
-		hospitalsCapacityRandomness = randomness;
-		for (Hospital h: hospitals) h.setReleaseFactor(randomness);
+	public static void setPatientReleaseFactor(int releaseFactor) {
+		patientReleaseFactor = releaseFactor;
+		for (Hospital h: hospitals) h.setReleaseFactor(releaseFactor);
 	}
 
 	public static void setLostEmergenciesRandomness(int randomness) {
@@ -237,8 +237,8 @@ public class Board {
 		return lostEmergenciesRandomness;
 	}
 
-	public static int getHospitalsCapacityRandomness() {
-		return hospitalsCapacityRandomness;
+	public static int getPatientReleaseFactor() {
+		return patientReleaseFactor;
 	}
 
 	public static void setEmergenciesRandomness(int emergenciesRandomness) {
@@ -537,7 +537,7 @@ public class Board {
 				filename += "r_";
 			filename += emergenciesRandomness
 					+ "_" + hospitalsMaxCapacity
-					+ "_" + hospitalsCapacityRandomness
+					+ "_" + patientReleaseFactor
 					+ "_" + lostEmergenciesRandomness
 					+ "_" + blueAmbulances
 					+ "_" + yellowAmbulances

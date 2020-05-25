@@ -23,12 +23,12 @@ public class GUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	static JTextField speed, emergenciesRandomness, blueAmbulances, yellowAmbulances, redAmbulances, hospitalsMaxCapacity,
-					hospitalsCapacityRandomness, lostEmergenciesRandomness;
+					patientReleaseFactor, lostEmergenciesRandomness;
 	static JPanel boardPanel;
 	static JButton run, reset, step;
 	static JLabel emergenciesQueue, emergenciesCompleted, lostEmergencies, hospitalsFull;
 	static JButton setEmergenciesRandomness, setBlueAmbulances, setYellowAmbulances, setRedAmbulances,
-					setHospitalsMaxCapacity, setHospitalsCapacityRandomness, setLostEmergenciesRandomness, setAmbulanceDecision, setAmbulanceBehavior;
+					setHospitalsMaxCapacity, setPatientReleaseFactor, setLostEmergenciesRandomness, setAmbulanceDecision, setAmbulanceBehavior;
 	private int nX, nY;
 
 	public class Cell extends JPanel {
@@ -101,7 +101,7 @@ public class GUI extends JFrame {
 		add(hospitalsMaxCapacityPanel());
 		add(emergenciesCompleted());
 		add(lostEmergenciesPanel());
-		add(hospitalsCapacityRandomnessPanel());
+		add(patientReleaseFactor());
 		add(lostEmergenciesRandomness());
 		add(ambulancesDecision());
 		add(ambulancesBehavior());
@@ -282,29 +282,29 @@ public class GUI extends JFrame {
 		return panel;
 	}
 
-	private Component hospitalsCapacityRandomnessPanel() {
+	private Component patientReleaseFactor() {
 		JPanel panel = new JPanel();
 		panel.setSize(new Dimension(325,50));
 		panel.setLocation(new Point(725,150));
 
-		JLabel label = new JLabel("Hospitals Capacity Randomness");
+		JLabel label = new JLabel("Patients Release Factor");
 		panel.add(label);
-		hospitalsCapacityRandomness = new JTextField("2");
-		hospitalsCapacityRandomness.setMargin(new Insets(5,5,5,5));
-		hospitalsCapacityRandomness.setColumns(5);
-		Board.setHospitalsCapacityRandomness(Integer.parseInt(hospitalsCapacityRandomness.getText()));
-		panel.add(hospitalsCapacityRandomness);
+		patientReleaseFactor = new JTextField("2");
+		patientReleaseFactor.setMargin(new Insets(5,5,5,5));
+		patientReleaseFactor.setColumns(5);
+		Board.setPatientReleaseFactor(Integer.parseInt(patientReleaseFactor.getText()));
+		panel.add(patientReleaseFactor);
 
-		setHospitalsCapacityRandomness = new JButton("Set");
-		panel.add(setHospitalsCapacityRandomness);
-		setHospitalsCapacityRandomness.addActionListener(new ActionListener() {
+		setPatientReleaseFactor = new JButton("Set");
+		panel.add(setPatientReleaseFactor);
+		setPatientReleaseFactor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0){
 				try{
-					Board.setHospitalsCapacityRandomness(Integer.parseInt(hospitalsCapacityRandomness.getText()));
-					System.out.println("hospitals capacity randomness: " + Board.getHospitalsCapacityRandomness());
+					Board.setPatientReleaseFactor(Integer.parseInt(patientReleaseFactor.getText()));
+					System.out.println("hospitals capacity randomness: " + Board.getPatientReleaseFactor());
 				}catch(Exception e){
 					JTextPane output=new JTextPane();
-					output.setText("Please insert an valid integer value in Hospitals Capacity Randomness\nValue inserted = "+hospitalsCapacityRandomness.getText());
+					output.setText("Please insert an valid integer value in Patient Release Factor\nValue inserted = "+patientReleaseFactor.getText());
 					JOptionPane.showMessageDialog(null,output,"Error",JOptionPane.PLAIN_MESSAGE);
 				}
 			}
