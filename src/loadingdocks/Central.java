@@ -25,16 +25,11 @@ public class Central {
         return hospitals;
     }
 
-    // public Emergency getCurrentEmergency() { return this.currentEmergency; }
-
     public void addEmergencyToQueue(Emergency e) { this.emergencies.add(e); }
 
     public Emergency getCurrentEmergency() {
         return this.currentEmergency;
-        //return this.emergencies.get(0);
     }
-
-    // public Emergency removeEmergencyFromQueue() { return this.emergencies.poll(); }
 
     public void removeEmergency(Emergency e) { this.emergencies.remove(e); }
 
@@ -59,7 +54,6 @@ public class Central {
 
     private void sendEmergenciesToAmbulancesInternal(Emergency.EmergencyGravity gravity){
         System.out.println("Going to send emergencies of type " + gravity + " to ambulances.");
-        // does it make a difference emergencies.get(0).EmergencyGravity to select the order in which the ambulances are selected ??
         List<Emergency> emergenciesToHandle = getAvailableEmergenciesPerGravity(emergencies, gravity);
         List<Ambulance> availableAmbulances = getAvailableAmbulancesPerGravity(gravity);
 
@@ -137,7 +131,6 @@ public class Central {
                 if (h.canReceivePatient()) {
                     System.out.println("can receive patient");
                     decidedHospital = h;
-                    //decidedHospital.increaseCapacity();
                     break;
                 }
             }
@@ -146,17 +139,10 @@ public class Central {
             if (decidedHospital == null) {
                 System.out.println("can't receive emergency due to the lack of hospitals. Emergency will be kept in queue. Analysing next emergency.");
                 System.out.println("queue size: " + emergencies.size());
-
-                //Emergency failedEmergency = getCurrentEmergency();
-                //emergencies.remove(failedEmergency); // remove from the head
-                //emergencies.add(failedEmergency); // add to the tail
-                //System.out.println("Queue head: (" + getCurrentEmergency().point.x + "," + getCurrentEmergency().point.y + ")");
-                //System.out.println("Queue tail: (" + emergencies.get(emergencies.size() - 1).point.x + "," + emergencies.get(emergencies.size() - 1).point.y + ")");
                 continue;
             }
 
             for (Station s: stations) {
-                //Station currentNearestStation = stations.get(i);
                 System.out.println("nearest station is at: (" + s.point.x + "," + s.point.y + ")");
                 System.out.println("available ambulances: " + s.availableAmbulances());
                 if (s.canReceiveEmergency() && s.closestAmbulance != null) {
@@ -175,11 +161,6 @@ public class Central {
             }
 
             System.out.println("can't receive emergency due to the lack of ambulances. Emergency will be kept in queue. Analysing next emergency.");
-            //Emergency failedEmergency = getCurrentEmergency();
-            //emergencies.remove(failedEmergency); // remove from the head
-            //emergencies.add(failedEmergency); // add to the tail
-            //System.out.println("Queue head: (" + getCurrentEmergency().point.x + "," + getCurrentEmergency().point.y + ")");
-            //System.out.println("Queue tail: (" + emergencies.get(emergencies.size() - 1).point.x + "," + emergencies.get(emergencies.size() - 1).point.y + ")");
             System.out.println("queue size: " + emergencies.size());
         }
 

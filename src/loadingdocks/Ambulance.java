@@ -34,10 +34,6 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
 
     private Patient currentPatient = null;
 
-    //private ConcurrentHashMap<Ambulance, List<EmergencyDistances>> allAmbulancesDistances;
-
-    //private ConcurrentHashMap<Ambulance, Emergency> allMinEmergenciesAmbulances;
-
     private List<EmergencyDistances> distancesToEmergencies;
 
     public Emergency minEmergency;
@@ -167,9 +163,6 @@ public class Ambulance extends Entity implements Comparable<Ambulance>{
                 bestHospital.addPatient(patient);
                 rescue(minEmergency, bestHospital, patient);
                 Board.getCentral().removeEmergency(minEmergency);
-            }
-            else{
-                //TODO
             }
         }
     }

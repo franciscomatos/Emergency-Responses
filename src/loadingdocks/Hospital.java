@@ -18,7 +18,7 @@ public class Hospital extends Entity implements Comparable<Hospital>{
         super (point, color);
         this.maxCapacity = maxCapacity;
         this.patients = new ArrayList<>();
-        this.releaseFactor = 5; // right now is hardcoded to 10
+        this.releaseFactor = 5;
     }
 
     public void setCentral(Central central) {
@@ -56,8 +56,6 @@ public class Hospital extends Entity implements Comparable<Hospital>{
             Patient p = patientsIterator.next();
             if(p.inHospital() && p.toBeReleased()) patientsIterator.remove();
         }
-
-        //setCurrentCapacity(getMaxCapacity() - this.patients.size());
 
         System.out.println("Updated patients. Now there are " + this.patients.size() + " patients:");
         System.out.println(this.patients.toString());

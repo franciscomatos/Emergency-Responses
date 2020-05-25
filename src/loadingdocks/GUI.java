@@ -27,15 +27,13 @@ public class GUI extends JFrame {
 	static JPanel boardPanel;
 	static JButton run, reset, step;
 	static JLabel emergenciesQueue, emergenciesCompleted, lostEmergencies, hospitalsFull;
-	static JButton setSpeed, setEmergenciesRandomness, setBlueAmbulances, setYellowAmbulances, setRedAmbulances,
+	static JButton setEmergenciesRandomness, setBlueAmbulances, setYellowAmbulances, setRedAmbulances,
 					setHospitalsMaxCapacity, setHospitalsCapacityRandomness, setLostEmergenciesRandomness, setAmbulanceDecision, setAmbulanceBehavior;
 	private int nX, nY;
 
 	public class Cell extends JPanel {
 
 		private static final long serialVersionUID = 1L;
-
-		//public List<Entity> entities = new ArrayList<Entity>();
 
 		public Entity entity = null;
 
@@ -126,7 +124,6 @@ public class GUI extends JFrame {
 
 		displayBoard();
 		Board.displayObjects();
-		//Board.displayInitialObjects();
 		update();
 		add(boardPanel);
 	}
@@ -490,13 +487,13 @@ public class GUI extends JFrame {
 		panel.add(riskyDecision);
 		group.add(riskyDecision);
 
-		setAmbulanceDecision = new JButton("Set");
-		panel.add(setAmbulanceDecision);
+		setAmbulanceBehavior = new JButton("Set");
+		panel.add(setAmbulanceBehavior);
 
 		riskyDecision.setSelected(true); // default behavior
 		Board.setAmbulancesBehavior(Board.AmbulancesBehavior.Risky); // default behavior
 
-		setAmbulanceDecision.addActionListener(new ActionListener() {
+		setAmbulanceBehavior.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (conservativeDecision.isSelected()){
 					Board.setAmbulancesBehavior(Board.AmbulancesBehavior.Conservative);

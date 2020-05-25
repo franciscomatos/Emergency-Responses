@@ -5,11 +5,7 @@ import java.awt.Point;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import loadingdocks.Block.Shape;
 
@@ -156,7 +152,6 @@ public class Board {
 			}
 		}
 
-		//File directory = new File(LOGSDIRECTORY);
 		if (!LOGSDIRECTORY.exists()){
             LOGSDIRECTORY.mkdir();
 		}
@@ -267,26 +262,6 @@ public class Board {
 				ambulances.addAll(station.getBlueAmbulances());
 			}
 		}
-//		if (blueAmbulances > Board.blueAmbulances){
-//
-//			if (stations != null){
-//				for(Station station: stations){
-//					ambulances.removeAll(station.getBlueAmbulances());
-//					station.addBlueAmbulances(blueAmbulances);
-//					ambulances.addAll(station.getBlueAmbulances());
-//				}
-//			}
-//		}
-//		else if(blueAmbulances < Board.blueAmbulances){
-//			Board.blueAmbulances = blueAmbulances;
-//			if (stations != null){
-//				for(Station station: stations){
-//					ambulances.addAll(station.getBlueAmbulances());
-//					station.removeBlueAmbulances(blueAmbulances);
-//					ambulances.addAll(station.getBlueAmbulances());
-//				}
-//			}
-//		}
 		if(stations != null) {
 			System.out.println("blue ambulances in station: " + stations.get(0).getBlueAmbulances().size());
 			System.out.println("ambulances in board: " + ambulances.size());
@@ -310,26 +285,6 @@ public class Board {
 				ambulances.addAll(station.getYellowAmbulances());
 			}
 		}
-//		if (yellowAmbulances > Board.yellowAmbulances){
-//			Board.yellowAmbulances = yellowAmbulances;
-//			if (stations != null){
-//				for(Station station: stations){
-//					ambulances.removeAll(station.getYellowAmbulances());
-//					station.addYellowAmbulances(yellowAmbulances);
-//					ambulances.addAll(station.getYellowAmbulances());
-//				}
-//			}
-//		}
-//		else if (yellowAmbulances < Board.yellowAmbulances){
-//			Board.yellowAmbulances = yellowAmbulances;
-//			if (stations != null){
-//				for(Station station: stations){
-//					ambulances.removeAll(station.getYellowAmbulances());
-//					station.removeYellowAmbulances(yellowAmbulances);
-//					ambulances.addAll(station.getYellowAmbulances());
-//				}
-//			}
-//		}
 		if(stations != null) {
 			System.out.println("yellow ambulances in station: " + stations.get(0).getYellowAmbulances().size());
 			System.out.println("ambulances in board: " + ambulances.size());
@@ -353,26 +308,6 @@ public class Board {
 				ambulances.addAll(station.getRedAmbulances());
 			}
 		}
-//		if (redAmbulances > Board.redAmbulances){
-//			Board.redAmbulances = redAmbulances;
-//			if (stations != null){
-//				for(Station station: stations){
-//					ambulances.removeAll(station.getRedAmbulances());
-//					station.addRedAmbulances(redAmbulances);
-//					ambulances.addAll(station.getRedAmbulances());
-//				}
-//			}
-//		}
-//		else if (redAmbulances < Board.redAmbulances){
-//			Board.redAmbulances = redAmbulances;
-//			if (stations != null){
-//				for(Station station: stations){
-//					ambulances.removeAll(station.getRedAmbulances());
-//					station.removeRedAmbulances(redAmbulances);
-//					ambulances.addAll(station.getRedAmbulances());
-//				}
-//			}
-//		}
 		if(stations != null) {
 			System.out.println("red ambulances in station: " + stations.get(0).getRedAmbulances().size());
 			System.out.println("ambulances in board: " + ambulances.size());
@@ -653,7 +588,6 @@ public class Board {
 		for (Emergency emergency: emergencies) GUI.displayObject(emergency);
 		for(Station station : stations) GUI.displayObject(station);
 		for(Hospital hospital : hospitals) GUI.displayObject(hospital);
-		//for (Ambulance ambulance : ambulances) GUI.displayObject(ambulance);
 
 		for(Hospital hospital: getHospitals()) hospital.updatePatients();
 

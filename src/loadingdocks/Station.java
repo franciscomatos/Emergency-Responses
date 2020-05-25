@@ -62,12 +62,6 @@ public class Station extends Entity implements Comparable<Station>{
                 ambulancesToRemove--;
             }
         }
-//        for(Ambulance ambulance : ambulances){
-//            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.blue && ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0){
-//                ambulances.remove(ambulance);
-//                ambulancesToRemove--;
-//            }
-//        }
     }
 
     public void removeRedAmbulances(int ambulancesToRemove){
@@ -79,13 +73,6 @@ public class Station extends Entity implements Comparable<Station>{
                 ambulancesToRemove--;
             }
         }
-
-//          for(Ambulance ambulance : ambulances){
-//            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.red && ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0){
-//                ambulances.remove(ambulance);
-//                ambulancesToRemove--;
-//            }
-//      }
     }
 
     public void removeYellowAmbulances(int ambulancesToRemove){
@@ -97,14 +84,6 @@ public class Station extends Entity implements Comparable<Station>{
                 ambulancesToRemove--;
             }
         }
-
-
-//        for(Ambulance ambulance : ambulances){
-//            if(ambulance.available && ambulance.ambulanceType == Ambulance.AmbulanceType.yellow && ambulance.isAtStation(ambulance.point) && ambulancesToRemove > 0){
-//                ambulances.remove(ambulance);
-//                ambulancesToRemove--;
-//            }
-//        }
     }
 
     public int getEmergenciesCompleted() {
@@ -215,7 +194,6 @@ public class Station extends Entity implements Comparable<Station>{
         return availableAmbulances() > 0;
     }
 
-    // right now this method simply decreases a counter for testing purposes
     public void assistEmergency(Emergency emergency, Hospital hospital, Patient patient) {
         startEmergencyRequest(closestAmbulance, emergency);
         closestAmbulance.rescue(emergency, hospital, patient);
@@ -271,15 +249,6 @@ public class Station extends Entity implements Comparable<Station>{
                 }
             }
         }
-//        for (Ambulance ambulance : getAmbulances()) {
-//            if (ambulance.available) {
-//                Integer currentDistance = manhattanDistance(ambulance.point, central.getCurrentEmergency().point);
-//                if (currentDistance <= minimumDistance) {
-//                    minimumDistance = currentDistance;
-//                    closestAmbulance = ambulance;
-//                }
-//            }
-//        }
         return minimumDistance;
     }
 
