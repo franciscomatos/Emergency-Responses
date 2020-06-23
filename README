@@ -1,3 +1,7 @@
+# Emergency Responses
+
+Software consisting of a multi-agent system used to effectively distribute ambulances and resources to efficiently respond to emergency responses in accordance with the type, gravity, and spatiotemporal distribution of emergency requests.
+
 To use this software, please open its folder as a Java Project in Eclipse and run the Main class.
 Alternatively, you can use the terminal to compile the project (javac) and run emergencyresponses.Main (java).
 
